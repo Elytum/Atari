@@ -31,6 +31,7 @@ CURRENT_DIR = $(shell pwd)/$(NAME)
 all:$(NAME)
 
 $(NAME): $(OBJ)
+	git submodule init
 	git submodule update
 	make -C libft
 	@$(CC) -o $(NAME) libft/libft.a $(OBJ) -L /usr/lib -ltermcap
