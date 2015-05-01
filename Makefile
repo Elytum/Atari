@@ -17,7 +17,9 @@ CFLAGS = -Wall -Werror -Wextra -I./includes -g -O3
 NAME = atari
 
 #--------------Sources----------------------#
-FILES =	main.c
+FILES =	main.c		\
+		gnl.c		\
+		parsing.c
 
 OBJECT = $(patsubst %.c,%.o,$(FILES))
 OBJ = $(addprefix $(BASEDIR)/, $(OBJECT))
@@ -30,7 +32,7 @@ all:$(NAME)
 
 $(NAME): $(OBJ)
 	@git submodule update
-	@$(CC) -o $(NAME) $(OBJ) -L /usr/lib -ltermcap
+	@$(CC) -o $(NAME) libft/libft.a $(OBJ) -L /usr/lib -ltermcap
 
 %.o: %.c
 	$(CC) -o $@ -c $(CFLAGS) $<
