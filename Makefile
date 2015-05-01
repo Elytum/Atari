@@ -31,7 +31,8 @@ CURRENT_DIR = $(shell pwd)/$(NAME)
 all:$(NAME)
 
 $(NAME): $(OBJ)
-	@git submodule update
+	git submodule update
+	make -C libft
 	@$(CC) -o $(NAME) libft/libft.a $(OBJ) -L /usr/lib -ltermcap
 
 %.o: %.c
@@ -44,6 +45,7 @@ clean:
 fclean: clean
 		rm -Rf $(NAME)
 		rm -rf glfw
+		rm -rf libft/libft.a
 
 re: fclean all
 
