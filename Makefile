@@ -14,7 +14,7 @@
 CC = gcc
 CFLAGS = -Wall -Werror -Wextra -I./includes -O3
 #--------------Name-------------------------#
-NAME = atari
+NAME = arkanoid
 
 #--------------Sources----------------------#
 FILES =	main.c		\

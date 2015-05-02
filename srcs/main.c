@@ -41,12 +41,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     (void)mods;
 }
 
-void	ft_rebound(t_env *e)
-{
-	e->vecbally = -e->vecbally;
-	e->vecballx = -e->vecballx;
-}
-
 double	ft_abs(double v)
 {
 	return ((v < 0) ? -v : v);
@@ -85,53 +79,45 @@ void	ft_check_collision(t_env *e)
 				if (e->pasballx < fx + px && e->posballx > fx + px) //LEFT
 				{
 					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + px - e->pasballx)) + e->pasbally;
-dprintf(1, "\nLEFT\nt : %f, fy + py : %f, fy + sy - py : %f || t calc : %f/%f * %f + %f \n", t, fy + py, fy + sy - sy, e->posbally - e->pasbally, e->posballx - e->pasballx, (fx + px - e->pasballx), e->pasbally);
 					if (fy + py <= t && fy + sy - py >= t)
 					{
 						e->posbally = t;
 						e->posballx = fx + px;
 						e->vecballx = -e->vecballx;
 						e->map[i][j]--;
-						usleep(200000);
 					}
 				}
 				if (e->pasballx > fx + sx - px && e->posballx < fx + sx - px) //RIGHT
 				{
 					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + sx - px - e->pasballx)) + e->pasbally;
-dprintf(1, "\nRIGHT\nt : %f, fy + py : %f, fy + sy - py : %f || t calc : %f/%f * %f + %f \n", t, fy + py, fy + sy - sy, e->posbally - e->pasbally, e->posballx - e->pasballx, (fx + sx - px - e->pasballx), e->pasballx);
 					if (fy + py <= t && fy + sy - py >= t)
 					{
 						e->posbally = t;
 						e->posballx = fx + sx - px;
 						e->vecballx = -e->vecballx;
 						e->map[i][j]--;
-						usleep(200000);
 					}
 				}
 				if (e->pasbally < fy + py && e->posbally > fy + py) //DOWN
 				{
 					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + py - e->pasbally)) + e->pasballx;
-dprintf(1, "\nDOWN\nt : %f, fx + px : %f, fx + sx - px : %f || t calc : %f/%f * %f + %f \n", t, fx + px, fx + sx - sx, e->posballx - e->pasballx, e->posbally - e->pasbally, (fy + py - e->pasbally), e->pasballx);
 					if (t >= fx + px && fx + sx - px >= t)
 					{
 						e->posballx = t;
 						e->posbally = fy + py;
 						e->vecbally = -e->vecbally;
 						e->map[i][j]--;
-						usleep(200000);
 					}
 				}
 				if (e->pasbally > fy + sy - py && e->posbally < fy + sy - py) //UP
 				{
 					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + sy - py - e->pasbally)) + e->pasballx;
-dprintf(1, "\nDOWN\nt : %f, fx + px : %f, fx + sx - px : %f || t calc : %f/%f * %f + %f \n", t, fx + px, fx + sx - sx, e->posballx - e->pasballx, e->posbally - e->pasbally, (fy + sy - py - e->pasbally), e->pasballx);
 					if (fx + px <= t && fx + sx - px >= t)
 					{
 						e->posballx = t;
 						e->posbally = fy + sy - py;
 						e->vecbally = -e->vecbally;
 						e->map[i][j]--;
-						usleep(200000);
 					}
 				}
 			}
@@ -144,8 +130,33 @@ dprintf(1, "\nDOWN\nt : %f, fx + px : %f, fx + sx - px : %f || t calc : %f/%f * 
 void	ft_check_collision_barre(t_env *e)
 {
 	double l = (e->transpos * 0.01);
+
 	if (e->posbally <= -0.99 && e->posballx >= (l - 0.2) && e->posballx <= (l + 0.2))
+	{
 		e->vecbally = -e->vecbally;
+		if (e->posballx <= (l - 0.1))
+		{
+			if (e->vecballx > 0)
+			{
+				e->vecballx = -e->vecballx;
+				e->vecballx *= 1.1;
+			}
+			else
+				e->vecballx /= 1.1;
+		}
+		else if (e->posballx >= (l + 0.1))
+		{
+			if (e->vecballx < 0)
+			{
+				e->vecballx = -e->vecballx;
+				e->vecballx *= 1.1;
+			}
+			else
+				e->vecballx /= 1.1;
+		}
+		else
+			e->vecballx /= 1.2;
+	}
 }
 
 void	ft_check_collision_map(t_env *e)
@@ -255,10 +266,17 @@ void	ft_affiche_les_briques(t_env *e)
 
 void		aff_sphere(t_env *e)
 {
+	double	x;
+	double	y;
+	double	r;
+
+	r = sqrt(e->vecballx * e->vecballx + e->vecbally * e->vecbally) * 300;
+	x = e->vecballx / r * e->speed;
+	y = e->vecbally / r * e->speed;
 	e->pasballx = e->posballx;
 	e->pasbally = e->posbally;
-	e->posballx	+= e->vecballx;
-	e->posbally += e->vecbally;
+	e->posballx	+= x;
+	e->posbally += y;
 	// e->posbally += 0.001f;
 	// e->posballx	+= 0.0f;
 	glPushMatrix();
@@ -428,8 +446,9 @@ int		main(void)
 
 	e->posballx = .95;
 	e->posbally = -.2;
-	e->vecballx	= -0.007f;
-	e->vecbally = 0.007f;
+	e->vecballx	= -0.002f;
+	e->vecbally = 0.002f;
+	e->speed = 2;
     while (!glfwWindowShouldClose(window))
     {
     	refresh_frame(window);

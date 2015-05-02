@@ -24,6 +24,7 @@ typedef struct		s_env
 	float			pasbally;
 	float			vecballx;
 	float			vecbally;
+	float			speed;
 }					t_env;
 
 int					gnl(int const fd, char **line);
