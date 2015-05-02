@@ -18,6 +18,8 @@ typedef struct		s_env
 {
 	char			**map;
 	int				transpos;
+	float			posballx;
+	float			posbally;
 }					t_env;
 
 int					gnl(int const fd, char **line);
