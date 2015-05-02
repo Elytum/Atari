@@ -86,7 +86,7 @@ void	ft_check_collision(t_env *e)
 						e->map[i][j]--;
 					}
 				}
-				if (e->pasballx > fx + sx - px && e->posballx < fx + sx - px)
+				if (e->pasballx > fx + sx - px && e->posballx < fx + sx - px) //RIGHT
 				{
 					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + sx - px - e->pasballx)) + e->pasbally;
 					if (fy + py <= t && fy + sy - py >= t)
