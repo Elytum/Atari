@@ -47,20 +47,25 @@ void	ft_rebound(t_env *e)
 	e->vecballx = -e->vecballx;
 }
 
+double	ft_abs(double v)
+{
+	return ((v < 0) ? -v : v);
+}
+
 void	ft_check_collision(t_env *e)
 {
 	int		i;
 	int		j;
-	float	fx;
-	float	sx;
-	float	px;
-	float	fy;
-	float	sy;
-	float	py;
-	float	t;
+	double	fx;
+	double	sx;
+	double	px;
+	double	fy;
+	double	sy;
+	double	py;
+	double	t;
 
 	i = 0;
-	sx = 2 / (float)ft_strlen(e->map[i]);
+	sx = 2 / (double)ft_strlen(e->map[i]);
 	px = sx / 50;
 	sy = 0;
 
@@ -80,6 +85,7 @@ void	ft_check_collision(t_env *e)
 				if (e->pasballx < fx + px && e->posballx > fx + px) //LEFT
 				{
 					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + px - e->pasballx)) + e->pasbally;
+dprintf(1, "\nLEFT\nt : %f, fy + py : %f, fy + sy - py : %f || t calc : %f/%f * %f + %f \n", t, fy + py, fy + sy - sy, e->posbally - e->pasbally, e->posballx - e->pasballx, (fx + px - e->pasballx), e->pasbally);
 					if (fy + py <= t && fy + sy - py >= t)
 					{
 						e->posbally = t;
@@ -92,6 +98,7 @@ void	ft_check_collision(t_env *e)
 				if (e->pasballx > fx + sx - px && e->posballx < fx + sx - px) //RIGHT
 				{
 					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + sx - px - e->pasballx)) + e->pasbally;
+dprintf(1, "\nRIGHT\nt : %f, fy + py : %f, fy + sy - py : %f || t calc : %f/%f * %f + %f \n", t, fy + py, fy + sy - sy, e->posbally - e->pasbally, e->posballx - e->pasballx, (fx + sx - px - e->pasballx), e->pasballx);
 					if (fy + py <= t && fy + sy - py >= t)
 					{
 						e->posbally = t;
@@ -104,7 +111,8 @@ void	ft_check_collision(t_env *e)
 				if (e->pasbally < fy + py && e->posbally > fy + py) //DOWN
 				{
 					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + py - e->pasbally)) + e->pasballx;
-					if (fx + px <= t && fx + sx - px >= t)
+dprintf(1, "\nDOWN\nt : %f, fx + px : %f, fx + sx - px : %f || t calc : %f/%f * %f + %f \n", t, fx + px, fx + sx - sx, e->posballx - e->pasballx, e->posbally - e->pasbally, (fy + py - e->pasbally), e->pasballx);
+					if (t >= fx + px && fx + sx - px >= t)
 					{
 						e->posballx = t;
 						e->posbally = fy + py;
@@ -116,6 +124,7 @@ void	ft_check_collision(t_env *e)
 				if (e->pasbally > fy + sy - py && e->posbally < fy + sy - py) //UP
 				{
 					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + sy - py - e->pasbally)) + e->pasballx;
+dprintf(1, "\nDOWN\nt : %f, fx + px : %f, fx + sx - px : %f || t calc : %f/%f * %f + %f \n", t, fx + px, fx + sx - sx, e->posballx - e->pasballx, e->posbally - e->pasbally, (fy + sy - py - e->pasbally), e->pasballx);
 					if (fx + px <= t && fx + sx - px >= t)
 					{
 						e->posballx = t;
@@ -134,7 +143,7 @@ void	ft_check_collision(t_env *e)
 
 void	ft_check_collision_barre(t_env *e)
 {
-	float l = (e->transpos * 0.01);
+	double l = (e->transpos * 0.01);
 	if (e->posbally <= -0.99 && e->posballx >= (l - 0.2) && e->posballx <= (l + 0.2))
 		e->vecbally = -e->vecbally;
 }
@@ -167,21 +176,21 @@ void	ft_affiche_les_briques(t_env *e)
 {
 	int		i;
 	int		j;
-	float	fx;
-	float	sx;
-	float	px;
-	float	fy;
-	float	sy;
-	float	py;
+	double	fx;
+	double	sx;
+	double	px;
+	double	fy;
+	double	sy;
+	double	py;
 
 	i = 0;
-	sx = 2 / (float)ft_strlen(e->map[i]);
-	px = sx / 20;
+	sx = 2 / (double)ft_strlen(e->map[i]);
+	px = sx / 50;
 	sy = 0;
 	while (e->map[(int)sy])
 		sy++;
 	sy = (2 / (sy - 1)) / 2;
-	py = sy / 20;
+	py = sy / 50;
 	while (e->map[i])
 	{
 		j = 0;
@@ -253,7 +262,7 @@ void		aff_sphere(t_env *e)
 	// e->posbally += 0.001f;
 	// e->posballx	+= 0.0f;
 	glPushMatrix();
-	glTranslatef((float) e->posballx * 1.0, e->posbally * 1.0, 0.f);
+	glTranslatef((double) e->posballx * 1.0, e->posbally * 1.0, 0.f);
 	// glBegin(GL_TRIANGLES);
 
 	// 	glColor3f(1.f, 0.f, 0.f);
@@ -271,12 +280,12 @@ void		aff_sphere(t_env *e)
 
 
 
-	// const float DEG2RAD = 3.14159/180;
+	// const double DEG2RAD = 3.14159/180;
 	 //   glBegin(GL_LINE_LOOP);
- 	// float	radius = 0.01;
+ 	// double	radius = 0.01;
   //  for (int i=0; i <= 360; i++)
   //  {
-  //     float degInRad = i*DEG2RAD;
+  //     double degInRad = i*DEG2RAD;
   //     glVertex2f(cos(degInRad)*radius,sin(degInRad)*radius);
   //  }
  
@@ -291,7 +300,7 @@ double	slices = 80;
   for ( double eta0 = 0; eta0 < M_PI - 0.0001 - delta_eta; eta0 += delta_eta )
     {
       const double eta1 = eta0 + delta_eta;
-      const float  y0 = cos(eta0),        y1 = cos(eta1);
+      const double  y0 = cos(eta0),        y1 = cos(eta1);
       const double slice_r0 = sin(eta0),  slice_r1 = sin(eta1);
       const double delta_theta = delta_eta * slice_r1;
 
@@ -360,7 +369,7 @@ double	slices = 80;
 
 void		aff_bare(t_env *e)
 {
-	glTranslatef((float) e->transpos * 0.01f, 0.f, 0.f);
+	glTranslatef((double) e->transpos * 0.01f, 0.f, 0.f);
 	glBegin(GL_LINES);
 		glColor3f(0.f, 1.f, 0.f);
 		glVertex3f(-0.2f, -0.99f, 0.f);
@@ -371,12 +380,12 @@ void		aff_bare(t_env *e)
 
 void		refresh_frame(GLFWwindow* window)
 {
-	float ratio;
+	double ratio;
 	int width, height;
 	// glfwPollEvents();
 
 	glfwGetFramebufferSize(window, &width, &height);
-	ratio = width / (float) height;
+	ratio = width / (double) height;
 
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT);
