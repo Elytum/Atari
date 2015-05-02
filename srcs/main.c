@@ -57,16 +57,17 @@ void	ft_check_collision(t_env *e)
 	float	fy;
 	float	sy;
 	float	py;
+	float	t;
 
 	i = 0;
 	sx = 2 / (float)ft_strlen(e->map[i]);
-	px = sx / 20;
+	px = sx / 50;
 	sy = 0;
 
 	while (e->map[(int)sy])
 		sy++;
 	sy = (2 / (sy - 1)) / 2;
-	py = sy / 20;
+	py = sy / 50;
 	while (e->map[i])
 	{
 		j = 0;
@@ -76,11 +77,41 @@ void	ft_check_collision(t_env *e)
 			{
 				fx = -1 + j * sx;
 				fy = 1 - (i + 1) * sy;
-				if (e->posballx >= (fx + px) && e->posballx <= (fx + sx - px) && e->posbally <= (fy + sy - py) && e->posbally >= (fy + py))
+				if (e->pasballx < fx + px && e->posballx > fx + px) //LEFT
 				{
-					// rebond
-					e->vecbally = -e->vecbally;
-					e->map[i][j]--;
+					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + px - e->pasballx)) + e->pasbally;
+					if (fy + py <= t && fy + sy - py >= t)
+					{
+						e->vecballx = -e->vecballx;
+						e->map[i][j]--;
+					}
+				}
+				if (e->pasballx > fx + sx - px && e->posballx < fx + sx - px)
+				{
+					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + sx - px - e->pasballx)) + e->pasbally;
+					if (fy + py <= t && fy + sy - py >= t)
+					{
+						e->vecballx = -e->vecballx;
+						e->map[i][j]--;
+					}
+				}
+				if (e->pasbally < fy + py && e->posbally > fy + py) //DOWN
+				{
+					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + py - e->pasbally)) + e->pasballx;
+					if (fx + px <= t && fx + sx - px >= t)
+					{
+						e->vecbally = -e->vecbally;
+						e->map[i][j]--;
+					}
+				}
+				if (e->pasbally > fy + sy - py && e->posbally < fy + sy - py) //UP
+				{
+					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + sy - py - e->pasbally)) + e->pasballx;
+					if (fx + px <= t && fx + sx - px >= t)
+					{
+						e->vecbally = -e->vecbally;
+						e->map[i][j]--;
+					}
 				}
 			}
 		    j++;	
@@ -123,12 +154,12 @@ void	ft_affiche_les_briques(t_env *e)
 
 	i = 0;
 	sx = 2 / (float)ft_strlen(e->map[i]);
-	px = sx / 20;
+	px = sx / 50;
 	sy = 0;
 	while (e->map[(int)sy])
 		sy++;
 	sy = (2 / (sy - 1)) / 2;
-	py = sy / 20;
+	py = sy / 50;
 	while (e->map[i])
 	{
 		j = 0;
@@ -364,10 +395,10 @@ int		main(void)
     glfwSetKeyCallback(window, key_callback);
     batardarthurtg(e);
 
-	e->posballx = 0;
-	e->posbally = -0.92f;
-	e->vecballx	= 0.003f;
-	e->vecbally = 0.003f;
+	e->posballx = .95;
+	e->posbally = -.2;
+	e->vecballx	= -0.002f;
+	e->vecbally = 0.002f;
     while (!glfwWindowShouldClose(window))
     {
     	refresh_frame(window);
