@@ -2,6 +2,7 @@
 #include <GLFW/glfw3.h>
 
 #include <stdlib.h>
+#include <math.h>
 #include <stdio.h>
 
 static void error_callback(int error, const char* description)
@@ -70,12 +71,23 @@ void	ft_check_collision(t_env *e)
 				fx = -1 + j * sx;
 				fy = 1 - (i + 1) * sy;
 				if (e->posballx >= (fx + px) && e->posballx <= (fx + sx - px) && e->posbally <= (fy + sy - py) && e->posbally >= (fy + py))
+				{
+					// rebond
 					e->map[i][j]--;
+				}
 			}
 		    j++;	
 		}
 		i++;
 	}
+}
+
+void	ft_check_collision_barre(t_env *e)
+{
+	float l = (e->transpos * 0.01) / 2;
+	if (e->posbally <= -0.99 && e->posballx >= (l - 0.2) && e->posballx <= (l + 0.2))
+		write(1, "l", 1);
+	//rebond
 }
 
 void	ft_affiche_les_briques(t_env *e)
@@ -159,18 +171,128 @@ void	ft_affiche_les_briques(t_env *e)
 	}
 }
 
+void		aff_sphere(t_env *e)
+{
+	e->posbally -= 0.001f;
+	e->posballx	+= 0.0f;
+glPushMatrix();
+	glTranslatef((float) e->posballx * 1.0, e->posbally * 1.0, 0.f);
+	// glBegin(GL_TRIANGLES);
+
+	// 	glColor3f(1.f, 0.f, 0.f);
+ //        glVertex3f(-0.04f, -0.02f, 0.f);
+ //        glColor3f(0.f, 1.f, 0.f);
+ //        glVertex3f(0.04f, -0.02f, 0.f);
+ //        glColor3f(0.f, 0.f, 1.f);
+ //        glVertex3f(0.f, 0.04f, 0.f);
+	// glEnd();
+
+
+
+
+
+
+
+
+	// const float DEG2RAD = 3.14159/180;
+	 //   glBegin(GL_LINE_LOOP);
+ 	// float	radius = 0.01;
+  //  for (int i=0; i <= 360; i++)
+  //  {
+  //     float degInRad = i*DEG2RAD;
+  //     glVertex2f(cos(degInRad)*radius,sin(degInRad)*radius);
+  //  }
+ 
+  //  glEnd();
+double	slices = 80;
+ glBegin(GL_TRIANGLES);
+ const double delta_eta = M_PI / slices;
+
+  // Outer (eta) Loop: Iterate over longitude (north-to-south).
+  // Inner (theta) Loop: Iterate over latitude (east-to-west)
+
+  for ( double eta0 = 0; eta0 < M_PI - 0.0001 - delta_eta; eta0 += delta_eta )
+    {
+      const double eta1 = eta0 + delta_eta;
+      const float  y0 = cos(eta0),        y1 = cos(eta1);
+      const double slice_r0 = sin(eta0),  slice_r1 = sin(eta1);
+      const double delta_theta = delta_eta * slice_r1;
+
+      for ( double theta = 0; theta < 2 * M_PI; theta += delta_theta )
+        {
+          const double theta1 = theta + delta_theta;
+
+          /// Triangle 1
+
+          // Vertex 1
+          glNormal3f( slice_r1 * cos(theta), y1, slice_r1 * sin(theta) );
+          glVertex3f( slice_r1 * cos(theta) / 100, y1/ 100, slice_r1 * sin(theta) / 100);
+
+          // Vertex 2
+          glNormal3f( slice_r0 * cos(theta), y0, slice_r0 * sin(theta) );
+          glVertex3f( slice_r0 * cos(theta) / 100, y0/ 100, slice_r0 * sin(theta) / 100);
+
+          // Vertex 3      
+          glNormal3f( slice_r1 * cos(theta1), y1, slice_r1 * sin(theta1) );
+          glVertex3f( slice_r1 * cos(theta1) / 100, y1/ 100, slice_r1 * sin(theta1)/ 100 );
+
+          /// Triangle 2
+
+          // Vertex 3      
+          glNormal3f( slice_r1 * cos(theta1), y1, slice_r1 * sin(theta1) );
+          glVertex3f( slice_r1 * cos(theta1) / 100, y1/ 100, slice_r1 * sin(theta1)/ 100 );
+
+          // Vertex 2
+          glNormal3f( slice_r0 * cos(theta), y0, slice_r0 * sin(theta) );
+          glVertex3f( slice_r0 * cos(theta) / 100, y0/ 100, slice_r0 * sin(theta) / 100);
+
+          // Vertex 4
+          glNormal3f( slice_r0 * cos(theta1), y0, slice_r0 * sin(theta1) );
+          glVertex3f( slice_r0 * cos(theta1) / 100, y0/ 100, slice_r0 * sin(theta1)/ 100 );
+
+        }
+    }
+
+  glEnd();
+
+// glBindTexture (GL_TEXTURE_2D, 1);
+// glBegin (GL_QUADS);
+// glTexCoord2f (0.0, 0.0);
+// glVertex3f (0.0, 0.0, 0.0);
+// glTexCoord2f (1.0, 0.0);
+// glVertex3f (10.0, 0.0, 0.0);
+// glTexCoord2f (1.0, 1.0);
+// glVertex3f (10.0, 10.0, 0.0);
+// glTexCoord2f (0.0, 1.0);
+// glVertex3f (0.0, 10.0, 0.0);
+// glEnd ();
+
+
+// 	glBegin(GL_LINE_LOOP);
+// for(int i =0; i <= 300; i++){
+// double angle = 2 * M_PI * i / 300;
+// double x = cos(angle);
+// double y = sin(angle);
+// glVertex2d(x * 0.01,y * 0.01);
+// }
+// glEnd();
+
+
+	glPopMatrix();
+}
+
 void		aff_bare(t_env *e)
 {
 	glTranslatef((float) e->transpos * 0.01f, 0.f, 0.f);
 	glBegin(GL_LINES);
-	glColor3f(0.f, 1.f, 0.f);
-	glVertex3f(-0.2f, -0.99f, 0.f);
-	glColor3f(0.f, 1.f, 0.f);
-	glVertex3f(0.2f, -0.99f, 0.f);
+		glColor3f(0.f, 1.f, 0.f);
+		glVertex3f(-0.2f, -0.99f, 0.f);
+		glColor3f(0.f, 1.f, 0.f);
+		glVertex3f(0.2f, -0.99f, 0.f);
 	glEnd();
 }
 
-void		refresh_frame()
+void		refresh_frame(GLFWwindow* window)
 {
 	float ratio;
 	int width, height;
@@ -215,19 +337,16 @@ int		main(void)
     glfwMakeContextCurrent(window);
     glfwSwapInterval(0);
 	e->transpos = 0;
-	e->posballx = 0;
-	e->posbally = -0.99;
     glfwSetKeyCallback(window, key_callback);
     batardarthurtg(e);
 
-
+	e->posballx = 0;
+	e->posbally = 0.99f;
     while (!glfwWindowShouldClose(window))
     {
-    	refresh_frame();
+    	refresh_frame(window);
         ft_check_collision(e);
-//     	e->posballx = 0;
-//		e->posbally = -0.99;
-
+        aff_sphere(e);
 		ft_affiche_les_briques(e);
        	aff_bare(e);
         glfwSwapBuffers(window);
