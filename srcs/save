@@ -52,7 +52,7 @@ void	ft_affiche_les_briques(t_env *e)
 	sy = 0;
 	while (e->map[(int)sy])
 		sy++;
-	sy = (2 / (sy - 1)) / 2;
+	sy = 2 / sy;
 	py = sy / 20;
 	while (e->map[i])
 	{
@@ -63,7 +63,7 @@ void	ft_affiche_les_briques(t_env *e)
 			{
 				glBegin(GL_QUADS);
 				fx = -1 + j * sx;
-				fy = -1 + i * sy + 1;
+				fy = -1 + i * sy;
 				// dprintf(1, "fy = %f, sy = %f, py = %f\n", fy, sy, py);
 				if (e->map[i][j] == 2)
 				{

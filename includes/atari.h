@@ -17,7 +17,7 @@ typedef struct		s_save
 typedef struct		s_env
 {
 	char			**map;
-
+	int				transpos;
 }					t_env;
 
 int					gnl(int const fd, char **line);

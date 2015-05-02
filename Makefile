@@ -12,7 +12,7 @@
 
 # -------------Compilateur------------------#
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -I./includes -g -O3
+CFLAGS = -Wall -Werror -Wextra -I./includes -O3
 #--------------Name-------------------------#
 NAME = atari
 
@@ -33,11 +33,12 @@ all:$(NAME)
 $(NAME): $(OBJ)
 	git submodule init
 	git submodule update
+#	cd ./glfw;ccmake -DCMAKE_INSTALL_PREFIX:PATH=~/glfw .;make install
 	make -C libft
-	@$(CC) -o $(NAME) libft/libft.a $(OBJ) -L /usr/lib -ltermcap
+	@$(CC) -o $(NAME) libft/libft.a $(OBJ) -I ~/glfw/include -L ~/glfw/lib -lglfw -framework OpenGL -I ./includes -I ./glfw/deps/
 
 %.o: %.c
-	$(CC) -o $@ -c $(CFLAGS) $<
+	$(CC) -o $@ -c $(CFLAGS) -I ~/glfw/include -I ./includes -I ./glfw/deps/ $<
 	@git submodule update
 
 clean:
