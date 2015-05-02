@@ -130,7 +130,7 @@ void	ft_check_collision(t_env *e)
 
 void	ft_check_collision_barre(t_env *e)
 {
-	float l = (e->transpos * 0.01) / 2;
+	float l = (e->transpos * 0.01);
 	if (e->posbally <= -0.99 && e->posballx >= (l - 0.2) && e->posballx <= (l + 0.2))
 		e->vecbally = -e->vecbally;
 }
@@ -153,10 +153,10 @@ void	ft_check_collision_map(t_env *e)
 	}
 }
 
-void	ft_check_lost(t_env *e)
+void	ft_check_lost(t_env *e, GLFWwindow* window)
 {
 	if (e->posbally <= -1)
-		write(1, "LOST\n", 5);
+		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
 void	ft_affiche_les_briques(t_env *e)
@@ -423,7 +423,7 @@ int		main(void)
         ft_check_collision(e);
 		ft_check_collision_map(e);
 		ft_check_collision_barre(e);
-		ft_check_lost(e);
+		ft_check_lost(e, window);
         aff_sphere(e);
 		ft_affiche_les_briques(e);
        	aff_bare(e);
