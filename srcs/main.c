@@ -4,6 +4,14 @@
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
+#include <signal.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#include <sys/errno.h>
+#include <time.h>
+
+#define BLOCK_DESTRUCT 1
+char	*BLOCK_SOUNDS[5] = {"travail_termine.mp3", "travail_termine.mp3", "travail_termine.mp3", "peon_travail.mp3", "peon_travail.mp3"};
 
 static void error_callback(int error, const char* description)
 {
@@ -29,12 +37,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         glfwSetWindowShouldClose(window, GL_TRUE);
     else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-    	if (e->transpos + 5 < 100 - 20)
+    	if (e->transpos < 100 - 20)
 	    	e->transpos += 5;
     }
     else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-    	if (e->transpos -5 > -100 + 20)
+    	if (e->transpos > -100 + 20)
         	e->transpos -= 5;
     }
     (void)scancode;
@@ -45,6 +53,58 @@ double	ft_abs(double v)
 {
 	return ((v < 0) ? -v : v);
 }
+
+void	ft_playsound(char sound)
+{
+	static char *buff[3] = {"/usr/bin/afplay", NULL, NULL};
+	static int cpid_saved = 0;
+	int		r;
+
+	if (sound == BLOCK_DESTRUCT)
+	{
+		if (cpid_saved > 0)
+			kill (cpid_saved, 9);
+		srand(time(NULL));
+		r = rand() % 5;
+		buff[1] = BLOCK_SOUNDS[r];
+		cpid_saved = fork();
+	}
+	if (cpid_saved != -1)
+	{
+		if (cpid_saved == 0)
+			execv(buff[0], buff);
+		else
+			waitpid(-1, NULL, O_NONBLOCK);
+	}
+}
+
+// void	ft_playpermasound(char sound)
+// {
+// 	static char *buff[3] = {"/usr/bin/afplay", NULL, NULL};
+// 	int		cpid;
+// 	int		r;
+
+// 	if (sound == BLOCK_DESTRUCT)
+// 	{
+// 		if (cpid_saved > 0)
+// 			kill (cpid_saved, 9);
+// 		srand(time(NULL));
+// 		r = rand() % 5;
+// 		if (r == 0)
+// 			buff[1] = "travail_termine.mp3";
+// 		else
+// 			buff[1] = "peon_travail.mp3";
+// 		cpid_saved = fork();
+// 	}
+// 	if (cpid_saved != -1)
+// 	{
+// 		if (cpid_saved == 0)
+// 			execv(buff[0], buff);
+// 		else
+// 			waitpid(-1, NULL, O_NONBLOCK);
+// 	}
+// }
+
 
 void	ft_check_collision(t_env *e)
 {
@@ -85,6 +145,8 @@ void	ft_check_collision(t_env *e)
 						e->posballx = fx + px;
 						e->vecballx = -e->vecballx;
 						e->map[i][j]--;
+						e->speed *= 1.001;
+						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
 				if (e->pasballx > fx + sx - px && e->posballx < fx + sx - px) //RIGHT
@@ -96,6 +158,8 @@ void	ft_check_collision(t_env *e)
 						e->posballx = fx + sx - px;
 						e->vecballx = -e->vecballx;
 						e->map[i][j]--;
+						e->speed *= 1.001;
+						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
 				if (e->pasbally < fy + py && e->posbally > fy + py) //DOWN
@@ -107,6 +171,8 @@ void	ft_check_collision(t_env *e)
 						e->posbally = fy + py;
 						e->vecbally = -e->vecbally;
 						e->map[i][j]--;
+						e->speed *= 1.001;
+						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
 				if (e->pasbally > fy + sy - py && e->posbally < fy + sy - py) //UP
@@ -118,6 +184,8 @@ void	ft_check_collision(t_env *e)
 						e->posbally = fy + sy - py;
 						e->vecbally = -e->vecbally;
 						e->map[i][j]--;
+						e->speed *= 1.001;
+						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
 			}
@@ -156,6 +224,7 @@ void	ft_check_collision_barre(t_env *e)
 		}
 		else
 			e->vecballx /= 1.2;
+		e->speed *= 1.005;
 	}
 }
 
@@ -272,17 +341,29 @@ void	ft_affiche_les_briques(t_env *e)
 
 void		aff_sphere(t_env *e)
 {
-	double	x;
-	double	y;
+	// double	x;
+	// double	y;
 	double	r;
 
-	r = sqrt(e->vecballx * e->vecballx + e->vecbally * e->vecbally) * 500;
-	x = e->vecballx / r * e->speed;
-	y = e->vecbally / r * e->speed;
+	e->vecbally -= 0.0000005;
+	if (e->vecbally < 0)
+	{
+		e->speed *= 1.001;
+		e->vecbally -= 0.0000005;
+	}
+	else
+	{
+		e->speed /= 1.00095;
+		e->vecballx *= 1.0000005;
+	}
+	r = sqrt(e->vecballx * e->vecballx + e->vecbally * e->vecbally);
+	e->vecballx = e->vecballx / r;
+	e->vecbally = e->vecbally / r;
 	e->pasballx = e->posballx;
 	e->pasbally = e->posbally;
-	e->posballx	+= x;
-	e->posbally += y;
+	e->posballx	+= e->vecballx / 500 * e->speed;
+	e->posbally += e->vecbally / 500 * e->speed;
+	dprintf(1, "%f, %f\n", e->vecballx, e->vecbally);
 	// e->posbally += 0.001f;
 	// e->posballx	+= 0.0f;
 	glPushMatrix();
@@ -455,14 +536,15 @@ int		main(void)
 	e->vecballx	= -0.002f;
 	e->vecbally = 0.002f;
 	e->r = 0.01;
-	e->speed = 1;
+	e->speed = 0.9;
+	get_map(e, i, "./level/0.lvl");
     while (!glfwWindowShouldClose(window))
     {
     	refresh_frame(window); //
         ft_check_collision(e); //
 		ft_check_collision_map(e); //
 		ft_check_collision_barre(e); //
-		// ft_check_lost(e, window);
+		ft_check_lost(e, window);
         aff_sphere(e); //
 		ft_affiche_les_briques(e); //
        	aff_bare(e); //
