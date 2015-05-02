@@ -20,6 +20,10 @@ typedef struct		s_env
 	int				transpos;
 	float			posballx;
 	float			posbally;
+	float			pasballx;
+	float			pasbally;
+	float			vecballx;
+	float			vecbally;
 }					t_env;
 
 int					gnl(int const fd, char **line);

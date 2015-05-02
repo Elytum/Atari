@@ -1,4 +1,4 @@
-#include "atari.h"
+  #include "atari.h"
 #include <GLFW/glfw3.h>
 
 #include <stdlib.h>
@@ -41,6 +41,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     (void)mods;
 }
 
+void	ft_rebound(t_env *e)
+{
+	e->vecbally = -e->vecbally;
+	e->vecballx = -e->vecballx;
+}
+
 void	ft_check_collision(t_env *e)
 {
 	int		i;
@@ -73,6 +79,7 @@ void	ft_check_collision(t_env *e)
 				if (e->posballx >= (fx + px) && e->posballx <= (fx + sx - px) && e->posbally <= (fy + sy - py) && e->posbally >= (fy + py))
 				{
 					// rebond
+					e->vecbally = -e->vecbally;
 					e->map[i][j]--;
 				}
 			}
@@ -86,8 +93,21 @@ void	ft_check_collision_barre(t_env *e)
 {
 	float l = (e->transpos * 0.01) / 2;
 	if (e->posbally <= -0.99 && e->posballx >= (l - 0.2) && e->posballx <= (l + 0.2))
-		write(1, "l", 1);
-	//rebond
+		e->vecbally = -e->vecbally;
+}
+
+void	ft_check_collision_map(t_env *e)
+{
+	if (e->posballx >= 1 || e->posballx <= -1)
+		e->vecballx = -e->vecballx;
+	if (e->posbally >= 1)
+		e->vecbally = -e->vecbally;
+}
+
+void	ft_check_lost(t_env *e)
+{
+	if (e->posbally <= -1)
+		write(1, "LOST\n", 5);
 }
 
 void	ft_affiche_les_briques(t_env *e)
@@ -173,9 +193,13 @@ void	ft_affiche_les_briques(t_env *e)
 
 void		aff_sphere(t_env *e)
 {
-	e->posbally -= 0.001f;
-	e->posballx	+= 0.0f;
-glPushMatrix();
+	e->pasballx = e->posballx;
+	e->pasbally = e->posbally;
+	e->posballx	+= e->vecballx;
+	e->posbally += e->vecbally;
+	// e->posbally += 0.001f;
+	// e->posballx	+= 0.0f;
+	glPushMatrix();
 	glTranslatef((float) e->posballx * 1.0, e->posbally * 1.0, 0.f);
 	// glBegin(GL_TRIANGLES);
 
@@ -341,11 +365,16 @@ int		main(void)
     batardarthurtg(e);
 
 	e->posballx = 0;
-	e->posbally = 0.99f;
+	e->posbally = -0.92f;
+	e->vecballx	= 0.003f;
+	e->vecbally = 0.003f;
     while (!glfwWindowShouldClose(window))
     {
     	refresh_frame(window);
         ft_check_collision(e);
+		ft_check_collision_map(e);
+		ft_check_collision_barre(e);
+		ft_check_lost(e);
         aff_sphere(e);
 		ft_affiche_les_briques(e);
        	aff_bare(e);
