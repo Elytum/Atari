@@ -61,13 +61,13 @@ void	ft_check_collision(t_env *e)
 
 	i = 0;
 	sx = 2 / (float)ft_strlen(e->map[i]);
-	px = sx / 50;
+	px = sx / 20;
 	sy = 0;
 
 	while (e->map[(int)sy])
 		sy++;
 	sy = (2 / (sy - 1)) / 2;
-	py = sy / 50;
+	py = sy / 20;
 	while (e->map[i])
 	{
 		j = 0;
@@ -82,6 +82,8 @@ void	ft_check_collision(t_env *e)
 					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + px - e->pasballx)) + e->pasbally;
 					if (fy + py <= t && fy + sy - py >= t)
 					{
+						e->posbally = t;
+						e->posballx = fx + px;
 						e->vecballx = -e->vecballx;
 						e->map[i][j]--;
 					}
@@ -91,6 +93,8 @@ void	ft_check_collision(t_env *e)
 					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + sx - px - e->pasballx)) + e->pasbally;
 					if (fy + py <= t && fy + sy - py >= t)
 					{
+						e->posbally = t;
+						e->posballx = fx + sx - px;
 						e->vecballx = -e->vecballx;
 						e->map[i][j]--;
 					}
@@ -100,6 +104,8 @@ void	ft_check_collision(t_env *e)
 					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + py - e->pasbally)) + e->pasballx;
 					if (fx + px <= t && fx + sx - px >= t)
 					{
+						e->posballx = t;
+						e->posbally = fy + py;
 						e->vecbally = -e->vecbally;
 						e->map[i][j]--;
 					}
@@ -109,6 +115,8 @@ void	ft_check_collision(t_env *e)
 					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + sy - py - e->pasbally)) + e->pasballx;
 					if (fx + px <= t && fx + sx - px >= t)
 					{
+						e->posballx = t;
+						e->posbally = fy + sy - py;
 						e->vecbally = -e->vecbally;
 						e->map[i][j]--;
 					}
@@ -129,10 +137,20 @@ void	ft_check_collision_barre(t_env *e)
 
 void	ft_check_collision_map(t_env *e)
 {
-	if (e->posballx >= 1 || e->posballx <= -1)
+	if (e->posballx >= 1)
+	{
+		e->posballx = 1;
 		e->vecballx = -e->vecballx;
-	if (e->posbally >= 1)
+	}
+	else if (e->posballx <= -1)
+	{
+		e->posballx = -1;
+		e->vecballx = -e->vecballx;
+	}
+	if (e->posbally >= 1 || e->posbally <= -1)//if (e->posbally >= 1)
+	{
 		e->vecbally = -e->vecbally;
+	}
 }
 
 void	ft_check_lost(t_env *e)
@@ -154,12 +172,12 @@ void	ft_affiche_les_briques(t_env *e)
 
 	i = 0;
 	sx = 2 / (float)ft_strlen(e->map[i]);
-	px = sx / 50;
+	px = sx / 20;
 	sy = 0;
 	while (e->map[(int)sy])
 		sy++;
 	sy = (2 / (sy - 1)) / 2;
-	py = sy / 50;
+	py = sy / 20;
 	while (e->map[i])
 	{
 		j = 0;
@@ -397,8 +415,8 @@ int		main(void)
 
 	e->posballx = .95;
 	e->posbally = -.2;
-	e->vecballx	= -0.002f;
-	e->vecbally = 0.002f;
+	e->vecballx	= -0.01f;
+	e->vecbally = 0.01f;
     while (!glfwWindowShouldClose(window))
     {
     	refresh_frame(window);
