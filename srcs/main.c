@@ -63,7 +63,7 @@ void	ft_affiche_les_briques(t_env *e)
 			{
 				glBegin(GL_QUADS);
 				fx = -1 + j * sx;
-				fy = -1 + i * sy + 1;
+				fy = 1 - (i + 1) * sy;
 				// dprintf(1, "fy = %f, sy = %f, py = %f\n", fy, sy, py);
 				if (e->map[i][j] == 2)
 				{
@@ -137,7 +137,7 @@ int		main(void)
 	i = -1;
 	e = (t_env *)malloc(sizeof(t_env));
 	e->map = NULL;
-	get_map(e, i, "./level/0.lvl");
+	get_map(e, i, "./level/2.lvl");
 	print_map(e);
 	GLFWwindow* window;
 
