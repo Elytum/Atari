@@ -29,13 +29,13 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
         glfwSetWindowShouldClose(window, GL_TRUE);
     else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-    	if (e->transpos < 100 - 20)
-	    	e->transpos += 3;
+    	if (e->transpos + 5 < 100 - 20)
+	    	e->transpos += 5;
     }
     else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
-    	if (e->transpos > -100 + 20)
-        	e->transpos -= 3;
+    	if (e->transpos -5 > -100 + 20)
+        	e->transpos -= 5;
     }
     (void)scancode;
     (void)mods;
@@ -163,16 +163,22 @@ void	ft_check_collision_map(t_env *e)
 {
 	if (e->posballx >= 1)
 	{
-		e->posballx = 1;
+		e->posballx = e->posballx - ((e->posballx - 1) * 2);
 		e->vecballx = -e->vecballx;
 	}
 	else if (e->posballx <= -1)
 	{
-		e->posballx = -1;
+		e->posballx = e->posballx + ((-e->posballx - 1) * 2);
 		e->vecballx = -e->vecballx;
 	}
-	if (e->posbally >= 1 || e->posbally <= -1)//if (e->posbally >= 1)
+	if (e->posbally >= 1)
 	{
+		e->posbally = e->posbally - ((e->posbally - 1) * 2);
+		e->vecbally = -e->vecbally;
+	}
+	else if (e->posbally <= -1)
+	{
+		e->posbally = e->posbally + ((-e->posbally - 1) * 2);
 		e->vecbally = -e->vecbally;
 	}
 }
@@ -270,7 +276,7 @@ void		aff_sphere(t_env *e)
 	double	y;
 	double	r;
 
-	r = sqrt(e->vecballx * e->vecballx + e->vecbally * e->vecbally) * 300;
+	r = sqrt(e->vecballx * e->vecballx + e->vecbally * e->vecbally) * 500;
 	x = e->vecballx / r * e->speed;
 	y = e->vecbally / r * e->speed;
 	e->pasballx = e->posballx;
@@ -308,7 +314,7 @@ void		aff_sphere(t_env *e)
   //  }
  
   //  glEnd();
-double	slices = 80;
+double	slices = 20;
  glBegin(GL_TRIANGLES);
  const double delta_eta = M_PI / slices;
 
@@ -330,29 +336,29 @@ double	slices = 80;
 
           // Vertex 1
           glNormal3f( slice_r1 * cos(theta), y1, slice_r1 * sin(theta) );
-          glVertex3f( slice_r1 * cos(theta) / 100, y1/ 100, slice_r1 * sin(theta) / 100);
+          glVertex3f( slice_r1 * cos(theta) / (1 / e->r), y1/ (1 / e->r), slice_r1 * sin(theta) / (1 / e->r));
 
           // Vertex 2
           glNormal3f( slice_r0 * cos(theta), y0, slice_r0 * sin(theta) );
-          glVertex3f( slice_r0 * cos(theta) / 100, y0/ 100, slice_r0 * sin(theta) / 100);
+          glVertex3f( slice_r0 * cos(theta) / (1 / e->r), y0/ (1 / e->r), slice_r0 * sin(theta) / (1 / e->r));
 
           // Vertex 3      
           glNormal3f( slice_r1 * cos(theta1), y1, slice_r1 * sin(theta1) );
-          glVertex3f( slice_r1 * cos(theta1) / 100, y1/ 100, slice_r1 * sin(theta1)/ 100 );
+          glVertex3f( slice_r1 * cos(theta1) / (1 / e->r), y1/ (1 / e->r), slice_r1 * sin(theta1)/ (1 / e->r) );
 
           /// Triangle 2
 
           // Vertex 3      
           glNormal3f( slice_r1 * cos(theta1), y1, slice_r1 * sin(theta1) );
-          glVertex3f( slice_r1 * cos(theta1) / 100, y1/ 100, slice_r1 * sin(theta1)/ 100 );
+          glVertex3f( slice_r1 * cos(theta1) / (1 / e->r), y1/ (1 / e->r), slice_r1 * sin(theta1)/ (1 / e->r) );
 
           // Vertex 2
           glNormal3f( slice_r0 * cos(theta), y0, slice_r0 * sin(theta) );
-          glVertex3f( slice_r0 * cos(theta) / 100, y0/ 100, slice_r0 * sin(theta) / 100);
+          glVertex3f( slice_r0 * cos(theta) / (1 / e->r), y0/ (1 / e->r), slice_r0 * sin(theta) / (1 / e->r));
 
           // Vertex 4
           glNormal3f( slice_r0 * cos(theta1), y0, slice_r0 * sin(theta1) );
-          glVertex3f( slice_r0 * cos(theta1) / 100, y0/ 100, slice_r0 * sin(theta1)/ 100 );
+          glVertex3f( slice_r0 * cos(theta1) / (1 / e->r), y0/ (1 / e->r), slice_r0 * sin(theta1)/ (1 / e->r) );
 
         }
     }
@@ -423,7 +429,7 @@ int		main(void)
 	i = -1;
 	e = (t_env *)malloc(sizeof(t_env));
 	e->map = NULL;
-	get_map(e, i, "./level/0.lvl");
+	get_map(e, i, "./level/2.lvl");
 	print_map(e);
 	GLFWwindow* window;
     glfwSetErrorCallback(error_callback);
@@ -448,19 +454,21 @@ int		main(void)
 	e->posbally = -.2;
 	e->vecballx	= -0.002f;
 	e->vecbally = 0.002f;
-	e->speed = 2;
+	e->r = 0.01;
+	e->speed = 1;
     while (!glfwWindowShouldClose(window))
     {
-    	refresh_frame(window);
-        ft_check_collision(e);
-		ft_check_collision_map(e);
-		ft_check_collision_barre(e);
+    	refresh_frame(window); //
+        ft_check_collision(e); //
+		ft_check_collision_map(e); //
+		ft_check_collision_barre(e); //
 		// ft_check_lost(e, window);
-        aff_sphere(e);
-		ft_affiche_les_briques(e);
-       	aff_bare(e);
-        glfwSwapBuffers(window);
-        glfwPollEvents();
+        aff_sphere(e); //
+		ft_affiche_les_briques(e); //
+       	aff_bare(e); //
+        glfwSwapBuffers(window); //
+        glfwPollEvents(); //
+        //usleep(20000);
     }
 
 
