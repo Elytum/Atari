@@ -144,8 +144,9 @@ void	ft_check_collision(t_env *e)
 						e->posbally = t;
 						e->posballx = fx + px;
 						e->vecballx = -e->vecballx;
-						e->map[i][j]--;
-						e->speed *= 1.001;
+						if (e->map[i][j] > 1)
+							e->map[i][j]--;
+						e->speed *= 1.0005;
 						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
@@ -157,8 +158,9 @@ void	ft_check_collision(t_env *e)
 						e->posbally = t;
 						e->posballx = fx + sx - px;
 						e->vecballx = -e->vecballx;
-						e->map[i][j]--;
-						e->speed *= 1.001;
+						if (e->map[i][j] > 1)
+							e->map[i][j]--;
+						e->speed *= 1.0005;
 						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
@@ -170,8 +172,9 @@ void	ft_check_collision(t_env *e)
 						e->posballx = t;
 						e->posbally = fy + py;
 						e->vecbally = -e->vecbally;
-						e->map[i][j]--;
-						e->speed *= 1.001;
+						if (e->map[i][j] > 1)
+							e->map[i][j]--;
+						e->speed *= 1.0005;
 						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
@@ -183,8 +186,9 @@ void	ft_check_collision(t_env *e)
 						e->posballx = t;
 						e->posbally = fy + sy - py;
 						e->vecbally = -e->vecbally;
-						e->map[i][j]--;
-						e->speed *= 1.001;
+						if (e->map[i][j] > 1)
+							e->map[i][j]--;
+						e->speed *= 1.0005;
 						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
@@ -207,6 +211,10 @@ void	ft_check_collision_barre(t_env *e)
 			if (e->vecballx > 0)
 			{
 				e->vecballx = -e->vecballx;
+				if (e->vecballx > 0)
+					e->vecballx += 0.005;
+				else
+					e->vecballx -= 0.005;
 				e->vecballx *= 1.1;
 			}
 			else
@@ -217,6 +225,10 @@ void	ft_check_collision_barre(t_env *e)
 			if (e->vecballx < 0)
 			{
 				e->vecballx = -e->vecballx;
+				if (e->vecballx > 0)
+					e->vecballx += 0.005;
+				else
+					e->vecballx -= 0.005;
 				e->vecballx *= 1.1;
 			}
 			else
@@ -224,7 +236,7 @@ void	ft_check_collision_barre(t_env *e)
 		}
 		else
 			e->vecballx /= 1.2;
-		e->speed *= 1.005;
+		e->speed *= 1.001;
 	}
 }
 
@@ -329,6 +341,17 @@ void	ft_affiche_les_briques(t_env *e)
 					glColor3f(0.2f, 0.2f, 0.2f);
 					glVertex3f(fx + sx - px, fy + py, 0.f);
 					glColor3f(0.2f * 10.f/6.f, 0.2f * 10.f/6.f, 0.2f * 10.f/6.f);
+					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
+				}
+				else if (e->map[i][j] < 0)
+				{
+					glColor3f(0, 0.5, 0);
+					glVertex3f(fx + px, fy + sy - py, 0.f);
+					glColor3f(0.5, 0, 0);
+					glVertex3f(fx + px, fy + py, 0.f);
+					glColor3f(0, 0, 0.5);
+					glVertex3f(fx + sx - px, fy + py, 0.f);
+					glColor3f(0, 0, 0);
 					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
 				}
 			}
@@ -510,7 +533,7 @@ int		main(void)
 	i = -1;
 	e = (t_env *)malloc(sizeof(t_env));
 	e->map = NULL;
-	get_map(e, i, "./level/2.lvl");
+	get_map(e, i, "./level/0.lvl");
 	print_map(e);
 	GLFWwindow* window;
     glfwSetErrorCallback(error_callback);
@@ -537,7 +560,6 @@ int		main(void)
 	e->vecbally = 0.002f;
 	e->r = 0.01;
 	e->speed = 0.9;
-	get_map(e, i, "./level/0.lvl");
     while (!glfwWindowShouldClose(window))
     {
     	refresh_frame(window); //

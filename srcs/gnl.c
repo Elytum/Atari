@@ -15,13 +15,13 @@ static void		ft_getline(char **line, char **save, int ret)
 	size_t	len;
 	char	*tmp;
 
-	if (ret == 0 && ft_strchr(*save, '\n') == NULL)
+	if (ret == 0 && ft_strchr(*save, 13) == NULL)
 	{
 		*line = *save;
 		*save = ft_strnew(1);
 		return ;
 	}
-	len = ft_strchr(*save, '\n') - *save;
+	len = ft_strchr(*save, 13) - *save;
 	*line = ft_strsub(*save, 0, len);
 	tmp = *save;
 	*save = ft_strsub(tmp, len + 1, ft_strlen(tmp) - len - 1);
@@ -89,7 +89,7 @@ int				gnl(int const fd, char **line)
 	tmp = ft_getfd(fd, &save);
 	if (tmp == NULL)
 		return (-1);
-	while (tmp->save != NULL && ft_strchr(tmp->save, '\n') == NULL
+	while (tmp->save != NULL && ft_strchr(tmp->save, 13) == NULL
 		&& ((ret = read(fd, buf, BUFF_SIZE)) > 0))
 		ft_addbuf(&(tmp->save), buf, ret);
 	if (ret == -1 || tmp->save == NULL)
