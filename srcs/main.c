@@ -61,13 +61,13 @@ void	ft_check_collision(t_env *e)
 
 	i = 0;
 	sx = 2 / (float)ft_strlen(e->map[i]);
-	px = sx / 20;
+	px = sx / 50;
 	sy = 0;
 
 	while (e->map[(int)sy])
 		sy++;
 	sy = (2 / (sy - 1)) / 2;
-	py = sy / 20;
+	py = sy / 50;
 	while (e->map[i])
 	{
 		j = 0;
@@ -86,6 +86,7 @@ void	ft_check_collision(t_env *e)
 						e->posballx = fx + px;
 						e->vecballx = -e->vecballx;
 						e->map[i][j]--;
+						usleep(200000);
 					}
 				}
 				if (e->pasballx > fx + sx - px && e->posballx < fx + sx - px) //RIGHT
@@ -97,6 +98,7 @@ void	ft_check_collision(t_env *e)
 						e->posballx = fx + sx - px;
 						e->vecballx = -e->vecballx;
 						e->map[i][j]--;
+						usleep(200000);
 					}
 				}
 				if (e->pasbally < fy + py && e->posbally > fy + py) //DOWN
@@ -108,6 +110,7 @@ void	ft_check_collision(t_env *e)
 						e->posbally = fy + py;
 						e->vecbally = -e->vecbally;
 						e->map[i][j]--;
+						usleep(200000);
 					}
 				}
 				if (e->pasbally > fy + sy - py && e->posbally < fy + sy - py) //UP
@@ -119,6 +122,7 @@ void	ft_check_collision(t_env *e)
 						e->posbally = fy + sy - py;
 						e->vecbally = -e->vecbally;
 						e->map[i][j]--;
+						usleep(200000);
 					}
 				}
 			}
@@ -415,15 +419,15 @@ int		main(void)
 
 	e->posballx = .95;
 	e->posbally = -.2;
-	e->vecballx	= -0.01f;
-	e->vecbally = 0.01f;
+	e->vecballx	= -0.007f;
+	e->vecbally = 0.007f;
     while (!glfwWindowShouldClose(window))
     {
     	refresh_frame(window);
         ft_check_collision(e);
 		ft_check_collision_map(e);
 		ft_check_collision_barre(e);
-		ft_check_lost(e, window);
+		// ft_check_lost(e, window);
         aff_sphere(e);
 		ft_affiche_les_briques(e);
        	aff_bare(e);
