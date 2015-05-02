@@ -423,7 +423,7 @@ int		main(void)
 	i = -1;
 	e = (t_env *)malloc(sizeof(t_env));
 	e->map = NULL;
-	get_map(e, i, "./level/2.lvl");
+	get_map(e, i, "./level/0.lvl");
 	print_map(e);
 	GLFWwindow* window;
     glfwSetErrorCallback(error_callback);
