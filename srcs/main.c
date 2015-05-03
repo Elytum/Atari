@@ -9,8 +9,6 @@
 #include <sys/errno.h>
 #include <time.h>
 
-#include <OpenGL/gl.h>
-
 #define BLOCK_DESTRUCT 1
 char	*BLOCK_SOUNDS[5] = {"travail_termine.mp3", "travail_termine.mp3", "travail_termine.mp3", "peon_travail.mp3", "peon_travail.mp3"};
 

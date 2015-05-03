@@ -35,7 +35,7 @@ $(NAME): $(OBJ)
 	git submodule update
 #	cd ./glfw;ccmake -DCMAKE_INSTALL_PREFIX:PATH=~/glfw .;make install
 	make -C libft
-	@$(CC) -o $(NAME) libft/libft.a $(OBJ) -I ~/glfw/include -L ~/glfw/lib -lglfw -framework OpenGL -framework GLUT -I ./includes -I ./glfw/deps/
+	@$(CC) -o $(NAME) libft/libft.a $(OBJ) -I ~/glfw/include -L ~/glfw/lib -lglfw -framework OpenGL -I ./includes -I ./glfw/deps/
 
 %.o: %.c
 	$(CC) -o $@ -c $(CFLAGS) -I ~/glfw/include -I ./includes -I ./glfw/deps/ $<
