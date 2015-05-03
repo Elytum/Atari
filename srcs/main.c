@@ -1,6 +1,5 @@
   #include "atari.h"
 #include <GLFW/glfw3.h>
-
 #include <stdlib.h>
 #include <math.h>
 #include <stdio.h>
@@ -38,12 +37,12 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
     	if (e->transpos < 100 - 20)
-	    	e->transpos += 5;
+	    	e->transpos += 10;
     }
     else if (key == GLFW_KEY_LEFT && (action == GLFW_PRESS || action == GLFW_REPEAT))
     {
     	if (e->transpos > -100 + 20)
-        	e->transpos -= 5;
+        	e->transpos -= 10;
     }
     (void)scancode;
     (void)mods;
@@ -146,7 +145,7 @@ void	ft_check_collision(t_env *e)
 						e->vecballx = -e->vecballx;
 						if (e->map[i][j] > 1)
 							e->map[i][j]--;
-						e->speed *= 1.0005;
+						e->speed *= 1.00005;
 						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
@@ -160,7 +159,7 @@ void	ft_check_collision(t_env *e)
 						e->vecballx = -e->vecballx;
 						if (e->map[i][j] > 1)
 							e->map[i][j]--;
-						e->speed *= 1.0005;
+						e->speed *= 1.00005;
 						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
@@ -174,7 +173,7 @@ void	ft_check_collision(t_env *e)
 						e->vecbally = -e->vecbally;
 						if (e->map[i][j] > 1)
 							e->map[i][j]--;
-						e->speed *= 1.0005;
+						e->speed *= 1.00005;
 						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
@@ -188,7 +187,7 @@ void	ft_check_collision(t_env *e)
 						e->vecbally = -e->vecbally;
 						if (e->map[i][j] > 1)
 							e->map[i][j]--;
-						e->speed *= 1.0005;
+						e->speed *= 1.00005;
 						ft_playsound(BLOCK_DESTRUCT);
 					}
 				}
@@ -376,7 +375,7 @@ void		aff_sphere(t_env *e)
 	}
 	else
 	{
-		e->speed /= 1.00095;
+		e->speed /= 1.00099;
 		e->vecballx *= 1.0000005;
 	}
 	r = sqrt(e->vecballx * e->vecballx + e->vecbally * e->vecbally);
@@ -386,46 +385,19 @@ void		aff_sphere(t_env *e)
 	e->pasbally = e->posbally;
 	e->posballx	+= e->vecballx / 500 * e->speed;
 	e->posbally += e->vecbally / 500 * e->speed;
-	dprintf(1, "%f, %f\n", e->vecballx, e->vecbally);
-	// e->posbally += 0.001f;
-	// e->posballx	+= 0.0f;
 	glPushMatrix();
 	glTranslatef((double) e->posballx * 1.0, e->posbally * 1.0, 0.f);
-	// glBegin(GL_TRIANGLES);
-
-	// 	glColor3f(1.f, 0.f, 0.f);
- //        glVertex3f(-0.04f, -0.02f, 0.f);
- //        glColor3f(0.f, 1.f, 0.f);
- //        glVertex3f(0.04f, -0.02f, 0.f);
- //        glColor3f(0.f, 0.f, 1.f);
- //        glVertex3f(0.f, 0.04f, 0.f);
-	// glEnd();
 
 
 
+	double	slices = 20;
+	glBegin(GL_TRIANGLES);
+	const double delta_eta = M_PI / slices;
 
-
-
-
-
-	// const double DEG2RAD = 3.14159/180;
-	 //   glBegin(GL_LINE_LOOP);
- 	// double	radius = 0.01;
-  //  for (int i=0; i <= 360; i++)
-  //  {
-  //     double degInRad = i*DEG2RAD;
-  //     glVertex2f(cos(degInRad)*radius,sin(degInRad)*radius);
-  //  }
- 
-  //  glEnd();
-double	slices = 20;
- glBegin(GL_TRIANGLES);
- const double delta_eta = M_PI / slices;
-
-  // Outer (eta) Loop: Iterate over longitude (north-to-south).
-  // Inner (theta) Loop: Iterate over latitude (east-to-west)
-
-  for ( double eta0 = 0; eta0 < M_PI - 0.0001 - delta_eta; eta0 += delta_eta )
+	// Outer (eta) Loop: Iterate over longitude (north-to-south).
+	// Inner (theta) Loop: Iterate over latitude (east-to-west)
+	glColor3f(1.f, 0.f, 0.f);
+	for ( double eta0 = 0; eta0 < M_PI - 0.0001 - delta_eta; eta0 += delta_eta )
     {
       const double eta1 = eta0 + delta_eta;
       const double  y0 = cos(eta0),        y1 = cos(eta1);
@@ -466,37 +438,13 @@ double	slices = 20;
 
         }
     }
-
-  glEnd();
-
-// glBindTexture (GL_TEXTURE_2D, 1);
-// glBegin (GL_QUADS);
-// glTexCoord2f (0.0, 0.0);
-// glVertex3f (0.0, 0.0, 0.0);
-// glTexCoord2f (1.0, 0.0);
-// glVertex3f (10.0, 0.0, 0.0);
-// glTexCoord2f (1.0, 1.0);
-// glVertex3f (10.0, 10.0, 0.0);
-// glTexCoord2f (0.0, 1.0);
-// glVertex3f (0.0, 10.0, 0.0);
-// glEnd ();
-
-
-// 	glBegin(GL_LINE_LOOP);
-// for(int i =0; i <= 300; i++){
-// double angle = 2 * M_PI * i / 300;
-// double x = cos(angle);
-// double y = sin(angle);
-// glVertex2d(x * 0.01,y * 0.01);
-// }
-// glEnd();
-
-
+	glEnd();
 	glPopMatrix();
 }
 
 void		aff_bare(t_env *e)
 {
+	glPushMatrix();
 	glTranslatef((double) e->transpos * 0.01f, 0.f, 0.f);
 	glBegin(GL_LINES);
 		glColor3f(0.f, 1.f, 0.f);
@@ -504,13 +452,28 @@ void		aff_bare(t_env *e)
 		glColor3f(0.f, 1.f, 0.f);
 		glVertex3f(0.2f, -0.99f, 0.f);
 	glEnd();
+	glPopMatrix();
+}
+
+void		ft_draw_background(void)
+{
+	glBegin(GL_QUADS);
+	glColor3f(0.f, 0.f, 0.2f);
+	glVertex3f(-1.f, -1.f, 0.f);
+	glColor3f(0.f, 0.f, 0.3f);
+	glVertex3f(1.f, -1.f, 0.f);
+	glColor3f(0.f, 0.f, 0.1f);
+	glVertex3f(1.f, 1.f, 0.f);
+	glColor3f(0.f, 0.f, 0.1f);
+	glVertex3f(-1.f, 1.f, 0.0f);
+	glEnd();
 }
 
 void		refresh_frame(GLFWwindow* window)
 {
-	double ratio;
-	int width, height;
-	// glfwPollEvents();
+	double 	ratio;
+	int		height;
+	int		width;
 
 	glfwGetFramebufferSize(window, &width, &height);
 	ratio = width / (double) height;
@@ -519,6 +482,7 @@ void		refresh_frame(GLFWwindow* window)
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	glMatrixMode(GL_PROJECTION);
+	ft_draw_background();
 	glLoadIdentity();
 	glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
 	glMatrixMode(GL_MODELVIEW);
