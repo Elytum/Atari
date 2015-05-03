@@ -9,6 +9,8 @@
 #include <sys/errno.h>
 #include <time.h>
 
+#include <OpenGL/gl.h>
+
 #define BLOCK_DESTRUCT 1
 char	*BLOCK_SOUNDS[5] = {"travail_termine.mp3", "travail_termine.mp3", "travail_termine.mp3", "peon_travail.mp3", "peon_travail.mp3"};
 
@@ -119,13 +121,13 @@ void	ft_check_collision(t_env *e)
 
 	i = 0;
 	sx = 2 / (double)ft_strlen(e->map[i]);
-	px = sx / 50;
+	px = sx / 42;
 	sy = 0;
 
 	while (e->map[(int)sy])
 		sy++;
 	sy = (2 / (sy - 1)) / 2;
-	py = sy / 50;
+	py = sy / 42;
 	while (e->map[i])
 	{
 		j = 0;
@@ -282,12 +284,12 @@ void	ft_affiche_les_briques(t_env *e)
 
 	i = 0;
 	sx = 2 / (double)ft_strlen(e->map[i]);
-	px = sx / 50;
+	px = sx / 42;
 	sy = 0;
 	while (e->map[(int)sy])
 		sy++;
 	sy = (2 / (sy - 1)) / 2;
-	py = sy / 50;
+	py = sy / 42;
 	while (e->map[i])
 	{
 		j = 0;
@@ -342,7 +344,29 @@ void	ft_affiche_les_briques(t_env *e)
 					glColor3f(0.2f * 10.f/6.f, 0.2f * 10.f/6.f, 0.2f * 10.f/6.f);
 					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
 				}
-				else if (e->map[i][j] < 0)
+				else if (e->map[i][j] == -1)
+				{
+					glColor3f(1, 1, 1);
+					glVertex3f(fx + px, fy + sy - py, 0.f);
+					glColor3f(1, 1, 1);
+					glVertex3f(fx + px, fy + py, 0.f);
+					glColor3f(1, 1, 1);
+					glVertex3f(fx + sx - px, fy + py, 0.f);
+					glColor3f(1, 1, 1);
+					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
+				}
+				else if (e->map[i][j] == -2)
+				{
+					glColor3f(0, 0, 0);
+					glVertex3f(fx + px, fy + sy - py, 0.f);
+					glColor3f(0, 0, 0);
+					glVertex3f(fx + px, fy + py, 0.f);
+					glColor3f(0, 0, 0);
+					glVertex3f(fx + sx - px, fy + py, 0.f);
+					glColor3f(0, 0, 0);
+					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
+				}
+				else if (e->map[i][j] == -3)
 				{
 					glColor3f(0, 0.5, 0);
 					glVertex3f(fx + px, fy + sy - py, 0.f);
