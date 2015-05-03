@@ -12,9 +12,9 @@
 
 #include "atari.h"
 
-static void		ft_addbuf(char **save, char *buf, int ret)
+static void			ft_addbuf(char **save, char *buf, int ret)
 {
-	char	*tmp;
+	char			*tmp;
 
 	tmp = *save;
 	buf[ret] = '\0';
@@ -22,10 +22,10 @@ static void		ft_addbuf(char **save, char *buf, int ret)
 	free(tmp);
 }
 
-static void		ft_getline(char **line, char **save, int ret)
+static void			ft_getline(char **line, char **save, int ret)
 {
-	size_t	len;
-	char	*tmp;
+	size_t			len;
+	char			*tmp;
 
 	if (ret == 0 && ft_strchr(*save, 13) == NULL)
 	{
@@ -40,9 +40,9 @@ static void		ft_getline(char **line, char **save, int ret)
 	free(tmp);
 }
 
-static t_save	*ft_getfd(int fd, t_save **save)
+static t_save		*ft_getfd(int fd, t_save **save)
 {
-	t_save	*tmp;
+	t_save			*tmp;
 
 	tmp = *save;
 	while (tmp != NULL)
@@ -61,10 +61,10 @@ static t_save	*ft_getfd(int fd, t_save **save)
 	return (tmp);
 }
 
-static void		ft_delfd(int fd, t_save **save)
+static void			ft_delfd(int fd, t_save **save)
 {
-	t_save *tmp;
-	t_save *tmp2;
+	t_save			*tmp;
+	t_save			*tmp2;
 
 	tmp = *save;
 	if (tmp != NULL && tmp->fd == fd)
@@ -89,7 +89,7 @@ static void		ft_delfd(int fd, t_save **save)
 	}
 }
 
-int				gnl(int const fd, char **line)
+int					gnl(int const fd, char **line)
 {
 	char			buf[BUFF_SIZE + 1];
 	int				ret;
