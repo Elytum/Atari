@@ -53,6 +53,7 @@ int				main(void)
 	glfwSetErrorCallback(error_callback);
 	if (!glfwInit())
 		exit(EXIT_FAILURE);
+	sleep(42);
 	if (!(window = glfwCreateWindow(1000, 1000, "Arkanoid", NULL, NULL)))
 	{
 		glfwTerminate();

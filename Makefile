@@ -11,57 +11,57 @@
 # **************************************************************************** #
 
 # -------------Compilateur------------------#
-CC = gcc
-CFLAGS = -Wall -Werror -Wextra -I./includes -O3
+CC		=	gcc
 #--------------Name-------------------------#
-NAME = arkanoid
-
+NAME	=	arkanoid
+MYPATH	=	$(HOME)
 #--------------Sources----------------------#
-FILES =	main.c				\
-		parsing/gnl.c		\
-		parsing/parsing.c	\
-		tools/singletons.c	\
-		tools/math.c		\
-		drawings/draw_items.c \
-		drawings/draw_bricks.c \
-		drawings/draw_brick_1.c \
-		drawings/draw_brick_2.c \
-		drawings/draw_sphere.c \
-		collisions/collisions.c \
-		collisions/bricks_col.c \
-		sound/play_sounds.c		\
-		events/events.c			\
-		events/events2.c
+FILES	=	main.c					\
+			parsing/gnl.c			\
+			parsing/parsing.c		\
+			tools/singletons.c		\
+			tools/math.c			\
+			drawings/draw_items.c	\
+			drawings/draw_bricks.c	\
+			drawings/draw_brick_1.c	\
+			drawings/draw_brick_2.c	\
+			drawings/draw_sphere.c	\
+			collisions/collisions.c	\
+			collisions/bricks_col.c	\
+			sound/play_sounds.c		\
+			events/events.c			\
+			events/events2.c
+INC		=	-I./glfw/include/ -I./libft/ -I./includes
+GLFWLIB	=	glfw/src/libglfw3.a
+CCFLAGS	=	-Wall -Wextra -Werror -g
+LDFLAGS	=	-L./glfw/src -lglfw3 -framework glut -framework Cocoa -framework OpenGL -framework IOKit -framework CoreVideo -L./libft/ -lft
 
-OBJECT = $(patsubst %.c,%.o,$(FILES))
-OBJ = $(addprefix $(BASEDIR)/, $(OBJECT))
-BASEDIR = srcs
+SRCS	=	$(addprefix srcs/, $(FILES))
+OBJS	=	$(SRCS:.c=.o)
 
-CURRENT_DIR = $(shell pwd)/$(NAME)
 #--------------Actions----------------------#
 
-all:$(NAME)
+all: $(GLFWLIB) $(NAME)
 
-$(NAME): $(OBJ)
-	git submodule init
-	git submodule update
-#	cd ./glfw;ccmake -DCMAKE_INSTALL_PREFIX:PATH=~/glfw .;make install
-	make -C libft
-	@$(CC) -o $(NAME) libft/libft.a $(OBJ) -L ~/glfw/lib -lglfw -framework OpenGL
+$(GLFWLIB):
+	git submodule update --init
+	cmake -B./glfw -H./glfw
+	make -C ./glfw
+
+$(NAME): $(OBJS)
+	@make -C libft
+	$(CC) $(CCFLAGS) $(LDFLAGS) $(INC) $(OBJS) -o $(NAME)
 
 %.o: %.c
-	$(CC) -o $@ -c $(CFLAGS) -I ~/glfw/include -I ./includes -I ./libft -I ./glfw/deps/ $<
-	@git submodule update
-
+	$(CC) $(CCFLAGS) -c  $(INC) $< -o $@
+	
 clean:
-		rm -Rf $(OBJ)
-
-fclean: clean
-		rm -Rf $(NAME)
-		rm -rf glfw
-		rm -rf libft/libft.a
+	@make clean -C libft
+	rm -f $(OBJS)
+	
+fclean:	clean
+	@make fclean -C libft
+	rm -f $(NAME)
 
 re: fclean all
-
-.PHONY: all, fclean, clean, re 
 

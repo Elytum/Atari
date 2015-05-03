@@ -102,6 +102,7 @@ void			seek_map(t_env *e, char *path)
 			write(1, "Invalid map\n", 12), close(fd), exit(-1);
 		e->map[i] = ft_strdup(line), i++, free(line);
 	}
+	free(line);
 	e->map[i] = NULL, close(fd);
 }
 
@@ -115,12 +116,13 @@ void			get_map(t_env *e)
 	path = ft_get_path(e);
 	nbl = 0;
 	if ((fd = open(path, O_RDONLY)) <= 0)
-		return ;
+		exit(-1);
 	while (gnl(fd, &line) > 0)
 		nbl++, free(line);
+	free(line);
 	close(fd);
 	if (!(e->map = (char **)malloc(sizeof(char *) * (nbl + 1))))
-		return ;
+		exit(-1);
 	seek_map(e, path);
 	ft_blocks_count(e);
 }
