@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   gnl.c                                              :+:      :+:    :+:   */
+/*   draw_bricks.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achazal <achazal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,54 +10,53 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "atari.h"
+#include <atari.h>
+#include <GLFW/glfw3.h>
 
-void		print_map(t_env *e)
+static	void ft_draw_brick(t_env *e, int i, int j)
+{
+	glBegin(GL_QUADS);
+	e->fx = -1 + j * e->sx;
+	e->fy = 1 - (i + 1) * e->sy;
+	if (e->map[i][j] == 2)
+		ft_draw_brick_2(e);
+	else if (e->map[i][j] == 3)
+		ft_draw_brick_3(e);
+	else if (e->map[i][j] == 4)
+		ft_draw_brick_4(e);
+	else if (e->map[i][j] == 5)
+		ft_draw_brick_5(e);
+	else if (e->map[i][j] == -1)
+		ft_draw_brick__1(e);
+	else if (e->map[i][j] == -2)
+		ft_draw_brick__2(e);
+	else if (e->map[i][j] == -3)
+		ft_draw_brick__3(e);
+	glEnd();
+}
+
+void	ft_draw_bricks(t_env *e)
 {
 	int		i;
 	int		j;
-	char	lol;
 
 	i = 0;
+	e->sx = 2 / (double)ft_strlen(e->map[i]);
+	e->px = e->sx / 42;
+	e->sy = 0;
+	while (e->map[(int)e->sy])
+		e->sy++;
+	e->sy = (2 / (e->sy - 1)) / 2;
+	e->py = e->sy / 42;
 	while (e->map[i])
 	{
 		j = 0;
 		while (e->map[i][j])
 		{
-			lol = e->map[i][j] + 47;
-			write(1, &lol, 1);
-			j++;
+			if (e->map[i][j] != 1)
+				ft_draw_brick(e, i, j);
+		    j++;	
 		}
-		write(1, "\n", 1);
 		i++;
 	}
-}
-
-void		get_map(t_env *e, int fd, char *file)
-{
-	int		nbl;
-	char	**map;
-	char	*line;
-	int		i;
-
-	nbl = 0;
-	fd = open(file, O_RDONLY);
-	while (gnl(fd, &line) > 0)
-		nbl++, free(line);
-	close(fd);
-	map = (char **)malloc(sizeof(char *) * (nbl + 1));
-	i = 0;
-	if ((fd = open(file, O_RDONLY)) <= 0)
-		write(1, "Map does not exist\n", 19), exit (-1);
-	while (gnl(fd, &line) > 0)
-	{
-		if (i == 0)
-			nbl = ft_strlen(line);
-		else if (nbl != (int)ft_strlen(line) && *line)
-			write(1, "Invalid map\n", 12), close(fd), exit(-1);
-		map[i] = ft_strdup(line);
-		i++, free(line);
-	}
-	map[i] = NULL, close(fd);
-	e->map = map;
 }

@@ -1,4 +1,4 @@
-  #include "atari.h"
+#include "atari.h"
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <math.h>
@@ -10,7 +10,8 @@
 #include <time.h>
 
 #define BLOCK_DESTRUCT 1
-char	*BLOCK_SOUNDS[5] = {"travail_termine.mp3", "travail_termine.mp3", "travail_termine.mp3", "peon_travail.mp3", "peon_travail.mp3"};
+char	*BLOCK_SOUNDS[5] = {"travail_termine.mp3", "travail_termine.mp3",
+			"travail_termine.mp3", "peon_travail.mp3", "peon_travail.mp3"};
 
 static void error_callback(int error, const char* description)
 {
@@ -18,20 +19,11 @@ static void error_callback(int error, const char* description)
     (void)error;
 }
 
-t_env		*batardarthurtg(t_env *e)
-{
-	static t_env	*l = NULL;
-
-	if (e)
-		l = e;
-	return (l);
-}
-
 static void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	t_env	*e;
 
-	e = batardarthurtg(NULL);
+	e = get_singleton(NULL);
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
     else if (key == GLFW_KEY_RIGHT && (action == GLFW_PRESS || action == GLFW_REPEAT))
@@ -46,11 +38,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     }
     (void)scancode;
     (void)mods;
-}
-
-double	ft_abs(double v)
-{
-	return ((v < 0) ? -v : v);
 }
 
 void	ft_playsound(char sound)
@@ -269,119 +256,6 @@ void	ft_check_lost(t_env *e, GLFWwindow* window)
 		glfwSetWindowShouldClose(window, GL_TRUE);
 }
 
-void	ft_affiche_les_briques(t_env *e)
-{
-	int		i;
-	int		j;
-	double	fx;
-	double	sx;
-	double	px;
-	double	fy;
-	double	sy;
-	double	py;
-
-	i = 0;
-	sx = 2 / (double)ft_strlen(e->map[i]);
-	px = sx / 42;
-	sy = 0;
-	while (e->map[(int)sy])
-		sy++;
-	sy = (2 / (sy - 1)) / 2;
-	py = sy / 42;
-	while (e->map[i])
-	{
-		j = 0;
-		while (e->map[i][j])
-		{
-			if (e->map[i][j] != 1)
-			{
-				glBegin(GL_QUADS);
-				fx = -1 + j * sx;
-				fy = 1 - (i + 1) * sy;
-				if (e->map[i][j] == 2)
-				{
-					glColor3f(0.f, 0.5f * 6.f/10.f, 0.0f); // BAS GAUCHE
-					glVertex3f(fx + px, fy + sy - py, 0.f);
-					glColor3f(0.f, 0.5f, 0.0f); // HAUT GAUCHE
-					glVertex3f(fx + px, fy + py, 0.f);
-					glColor3f(0.f, 0.5f, 0.0f); // HAUT DROITE
-					glVertex3f(fx + sx - px, fy + py, 0.f);
-					glColor3f(0.f, 0.5f * 10.f/6.f, 0.0f); // BAS DROITE
-					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
-				}
-				else if (e->map[i][j] == 3)
-				{
-					glColor3f(0.f, 0.0f, 0.5f * 6.f/10.f);
-					glVertex3f(fx + px, fy + sy - py, 0.f);
-					glColor3f(0.f, 0.0f, 0.5f);
-					glVertex3f(fx + px, fy + py, 0.f);
-					glColor3f(0.f, 0.0f, 0.5f);
-					glVertex3f(fx + sx - px, fy + py, 0.f);
-					glColor3f(0.f, 0.0f, 0.5f * 10.f/6.f);
-					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
-				}
-				else if (e->map[i][j] == 4)
-				{
-					glColor3f(5.f * 6.f/100.f, 0.f, 0.f);
-					glVertex3f(fx + px, fy + sy - py, 0.f);
-					glColor3f(5.f, 0.f, 0.f);
-					glVertex3f(fx + px, fy + py, 0.f);
-					glColor3f(5.f, 0.f, 0.f);
-					glVertex3f(fx + sx - px, fy + py, 0.f);
-					glColor3f(5.f * 10.f/6.f, 0.f, 0.f);
-					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
-				}
-				else if (e->map[i][j] == 5)
-				{
-					glColor3f(0.2f * 6.f/10.f, 0.2f * 6.f/10.f, 0.2f * 6.f/10.f);
-					glVertex3f(fx + px, fy + sy - py, 0.f);
-					glColor3f(0.2f, 0.2f, 0.2f);
-					glVertex3f(fx + px, fy + py, 0.f);
-					glColor3f(0.2f, 0.2f, 0.2f);
-					glVertex3f(fx + sx - px, fy + py, 0.f);
-					glColor3f(0.2f * 10.f/6.f, 0.2f * 10.f/6.f, 0.2f * 10.f/6.f);
-					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
-				}
-				else if (e->map[i][j] == -1)
-				{
-					glColor3f(1, 1, 1);
-					glVertex3f(fx + px, fy + sy - py, 0.f);
-					glColor3f(1, 1, 1);
-					glVertex3f(fx + px, fy + py, 0.f);
-					glColor3f(1, 1, 1);
-					glVertex3f(fx + sx - px, fy + py, 0.f);
-					glColor3f(1, 1, 1);
-					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
-				}
-				else if (e->map[i][j] == -2)
-				{
-					glColor3f(0, 0, 0);
-					glVertex3f(fx + px, fy + sy - py, 0.f);
-					glColor3f(0, 0, 0);
-					glVertex3f(fx + px, fy + py, 0.f);
-					glColor3f(0, 0, 0);
-					glVertex3f(fx + sx - px, fy + py, 0.f);
-					glColor3f(0, 0, 0);
-					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
-				}
-				else if (e->map[i][j] == -3)
-				{
-					glColor3f(0, 0.5, 0);
-					glVertex3f(fx + px, fy + sy - py, 0.f);
-					glColor3f(0.5, 0, 0);
-					glVertex3f(fx + px, fy + py, 0.f);
-					glColor3f(0, 0, 0.5);
-					glVertex3f(fx + sx - px, fy + py, 0.f);
-					glColor3f(0, 0, 0);
-					glVertex3f(fx + sx - px, fy + sy - py, 0.f);
-				}
-			}
-		    glEnd();
-		    j++;	
-		}
-		i++;
-	}
-}
 
 void		aff_sphere(t_env *e)
 {
@@ -464,32 +338,6 @@ void		aff_sphere(t_env *e)
 	glPopMatrix();
 }
 
-void		aff_bare(t_env *e)
-{
-	glPushMatrix();
-	glTranslatef((double) e->transpos * 0.01f, 0.f, 0.f);
-	glBegin(GL_LINES);
-		glColor3f(0.f, 1.f, 0.f);
-		glVertex3f(-0.2f, -0.99f, 0.f);
-		glColor3f(0.f, 1.f, 0.f);
-		glVertex3f(0.2f, -0.99f, 0.f);
-	glEnd();
-	glPopMatrix();
-}
-
-void		ft_draw_background(void)
-{
-	glBegin(GL_QUADS);
-	glColor3f(0.f, 0.f, 0.2f);
-	glVertex3f(-1.f, -1.f, 0.f);
-	glColor3f(0.f, 0.f, 0.3f);
-	glVertex3f(1.f, -1.f, 0.f);
-	glColor3f(0.f, 0.f, 0.1f);
-	glVertex3f(1.f, 1.f, 0.f);
-	glColor3f(0.f, 0.f, 0.1f);
-	glVertex3f(-1.f, 1.f, 0.0f);
-	glEnd();
-}
 
 void		refresh_frame(GLFWwindow* window)
 {
@@ -538,7 +386,7 @@ int		main(void)
     glfwSwapInterval(0);
 	e->transpos = 0;
     glfwSetKeyCallback(window, key_callback);
-    batardarthurtg(e);
+    get_singleton(e);
 
 	e->posballx = .95;
 	e->posbally = -.2;
@@ -554,13 +402,12 @@ int		main(void)
 		ft_check_collision_barre(e); //
 		ft_check_lost(e, window);
         aff_sphere(e); //
-		ft_affiche_les_briques(e); //
+		ft_draw_bricks(e); //
        	aff_bare(e); //
         glfwSwapBuffers(window); //
         glfwPollEvents(); //
         //usleep(20000);
     }
-
 
     glfwDestroyWindow(window);
     glfwTerminate();

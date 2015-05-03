@@ -17,9 +17,15 @@ CFLAGS = -Wall -Werror -Wextra -I./includes -O3
 NAME = arkanoid
 
 #--------------Sources----------------------#
-FILES =	main.c		\
-		gnl.c		\
-		parsing.c
+FILES =	main.c				\
+		gnl.c				\
+		parsing.c			\
+		tools/singletons.c	\
+		tools/math.c		\
+		drawings/draw_items.c \
+		drawings/draw_bricks.c \
+		drawings/draw_brick_1.c \
+		drawings/draw_brick_2.c
 
 OBJECT = $(patsubst %.c,%.o,$(FILES))
 OBJ = $(addprefix $(BASEDIR)/, $(OBJECT))

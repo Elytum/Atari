@@ -26,9 +26,35 @@ typedef struct		s_env
 	double			vecbally;
 	double			speed;
 	double			r;
+	double			fx;
+	double			sx;
+	double			px;
+	double			fy;
+	double			sy;
+	double			py;
 }					t_env;
 
 int					gnl(int const fd, char **line);
 void				print_map(t_env *e);
 void				get_map(t_env *e, int fd, char *file);
+t_env				*get_singleton(t_env *e);
+
+/*
+Math functions
+*/
+double				ft_abs(double v);
+
+/*
+Draw functions
+*/
+void				aff_bare(t_env *e);
+void				ft_draw_background(void);
+void				ft_draw_bricks(t_env *e);
+void				ft_draw_brick_2(t_env *e);
+void				ft_draw_brick_3(t_env *e);
+void				ft_draw_brick_4(t_env *e);
+void				ft_draw_brick_5(t_env *e);
+void				ft_draw_brick__1(t_env *e);
+void				ft_draw_brick__2(t_env *e);
+void				ft_draw_brick__3(t_env *e);
 #endif
