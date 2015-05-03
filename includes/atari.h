@@ -57,4 +57,10 @@ void				ft_draw_brick_5(t_env *e);
 void				ft_draw_brick__1(t_env *e);
 void				ft_draw_brick__2(t_env *e);
 void				ft_draw_brick__3(t_env *e);
+
+/*
+Check collisions
+*/
+void				ft_check_collision_map(t_env *e);
+void				ft_check_collision_barre(t_env *e);
 #endif
