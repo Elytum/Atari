@@ -12,27 +12,113 @@
 
 #include <atari.h>
 
-void	ft_check_collision(t_env *e)
+static char			ft_collision_left(t_env *e, int i, int j)
 {
-	int		i;
-	int		j;
-	double	fx;
-	double	sx;
-	double	px;
-	double	fy;
-	double	sy;
-	double	py;
-	double	t;
+	static double	t;
+
+	if (e->pasballx < e->fx + e->px && e->posballx > e->fx + e->px)
+	{
+		t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) *
+			(e->fx + e->px - e->pasballx)) + e->pasbally;
+		if (e->fy + e->py <= t && e->fy + e->sy - e->py >= t)
+		{
+			e->posbally = t;
+			e->posballx = e->fx + e->px;
+			e->vecballx = -e->vecballx;
+			if (e->map[i][j] > 1)
+				e->map[i][j]--;
+			e->speed *= 1.00005;
+			ft_playsound(BLOCK_DESTRUCT);
+			return (1);
+		}
+	}
+	return (0);
+}
+
+static char			ft_collision_right(t_env *e, int i, int j)
+{
+	static double	t;
+
+	if (e->pasballx > e->fx + e->sx - e->px &&
+		e->posballx < e->fx + e->sx - e->px)
+	{
+		t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) *
+			(e->fx + e->sx - e->px - e->pasballx)) + e->pasbally;
+		if (e->fy + e->py <= t && e->fy + e->sy - e->py >= t)
+		{
+			e->posbally = t;
+			e->posballx = e->fx + e->sx - e->px;
+			e->vecballx = -e->vecballx;
+			if (e->map[i][j] > 1)
+				e->map[i][j]--;
+			e->speed *= 1.00005;
+			ft_playsound(BLOCK_DESTRUCT);
+			return (1);
+		}
+	}
+	return (0);
+}
+
+static char			ft_collision_down(t_env *e, int i, int j)
+{
+	static double	t;
+
+	if (e->pasbally < e->fy + e->py && e->posbally > e->fy + e->py)
+	{
+		t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) *
+			(e->fy + e->py - e->pasbally)) + e->pasballx;
+		if (t >= e->fx + e->px && e->fx + e->sx - e->px >= t)
+		{
+			e->posballx = t;
+			e->posbally = e->fy + e->py;
+			e->vecbally = -e->vecbally;
+			if (e->map[i][j] > 1)
+				e->map[i][j]--;
+			e->speed *= 1.00005;
+			ft_playsound(BLOCK_DESTRUCT);
+			return (1);
+		}
+	}
+	return (0);
+}
+
+static char			ft_collision_up(t_env *e, int i, int j)
+{
+	static double	t;
+
+	if (e->pasbally > e->fy + e->sy - e->py &&
+		e->posbally < e->fy + e->sy - e->py)
+	{
+		t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) *
+			(e->fy + e->sy - e->py - e->pasbally)) + e->pasballx;
+		if (e->fx + e->px <= t && e->fx + e->sx - e->px >= t)
+		{
+			e->posballx = t;
+			e->posbally = e->fy + e->sy - e->py;
+			e->vecbally = -e->vecbally;
+			if (e->map[i][j] > 1)
+				e->map[i][j]--;
+			e->speed *= 1.00005;
+			ft_playsound(BLOCK_DESTRUCT);
+			return (1);
+		}
+	}
+	return (0);
+}
+
+void				ft_check_collision(t_env *e)
+{
+	int				i;
+	int				j;
 
 	i = 0;
-	sx = 2 / (double)ft_strlen(e->map[i]);
-	px = sx / 42;
-	sy = 0;
-
-	while (e->map[(int)sy])
-		sy++;
-	sy = (2 / (sy - 1)) / 2;
-	py = sy / 42;
+	e->sx = 2 / (double)ft_strlen(e->map[i]);
+	e->px = e->sx / 42;
+	e->sy = 0;
+	while (e->map[(int)e->sy])
+		e->sy++;
+	e->sy = (2 / (e->sy - 1)) / 2;
+	e->py = e->sy / 42;
 	while (e->map[i])
 	{
 		j = 0;
@@ -40,66 +126,12 @@ void	ft_check_collision(t_env *e)
 		{
 			if (e->map[i][j] != 1)
 			{
-				fx = -1 + j * sx;
-				fy = 1 - (i + 1) * sy;
-				if (e->pasballx < fx + px && e->posballx > fx + px) //LEFT
-				{
-					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + px - e->pasballx)) + e->pasbally;
-					if (fy + py <= t && fy + sy - py >= t)
-					{
-						e->posbally = t;
-						e->posballx = fx + px;
-						e->vecballx = -e->vecballx;
-						if (e->map[i][j] > 1)
-							e->map[i][j]--;
-						e->speed *= 1.00005;
-						ft_playsound(BLOCK_DESTRUCT);
-					}
-				}
-				if (e->pasballx > fx + sx - px && e->posballx < fx + sx - px) //RIGHT
-				{
-					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + sx - px - e->pasballx)) + e->pasbally;
-					if (fy + py <= t && fy + sy - py >= t)
-					{
-						e->posbally = t;
-						e->posballx = fx + sx - px;
-						e->vecballx = -e->vecballx;
-						if (e->map[i][j] > 1)
-							e->map[i][j]--;
-						e->speed *= 1.00005;
-						ft_playsound(BLOCK_DESTRUCT);
-					}
-				}
-				if (e->pasbally < fy + py && e->posbally > fy + py) //DOWN
-				{
-					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + py - e->pasbally)) + e->pasballx;
-					if (t >= fx + px && fx + sx - px >= t)
-					{
-						e->posballx = t;
-						e->posbally = fy + py;
-						e->vecbally = -e->vecbally;
-						if (e->map[i][j] > 1)
-							e->map[i][j]--;
-						e->speed *= 1.00005;
-						ft_playsound(BLOCK_DESTRUCT);
-					}
-				}
-				if (e->pasbally > fy + sy - py && e->posbally < fy + sy - py) //UP
-				{
-					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + sy - py - e->pasbally)) + e->pasballx;
-					if (fx + px <= t && fx + sx - px >= t)
-					{
-						e->posballx = t;
-						e->posbally = fy + sy - py;
-						e->vecbally = -e->vecbally;
-						if (e->map[i][j] > 1)
-							e->map[i][j]--;
-						e->speed *= 1.00005;
-						ft_playsound(BLOCK_DESTRUCT);
-					}
-				}
+				e->fx = -1 + j * e->sx;
+				e->fy = 1 - (i + 1) * e->sy;
+				ft_collision_left(e, i, j), ft_collision_right(e, i, j),
+				ft_collision_down(e, i, j), ft_collision_up(e, i, j);
 			}
-		    j++;	
+			j++;
 		}
 		i++;
 	}

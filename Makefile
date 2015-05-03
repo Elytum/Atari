@@ -18,8 +18,8 @@ NAME = arkanoid
 
 #--------------Sources----------------------#
 FILES =	main.c				\
-		gnl.c				\
-		parsing.c			\
+		parsing/gnl.c		\
+		parsing/parsing.c	\
 		tools/singletons.c	\
 		tools/math.c		\
 		drawings/draw_items.c \
