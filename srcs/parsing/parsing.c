@@ -35,10 +35,29 @@ void		print_map(t_env *e)
 	}
 }
 
+void		ft_blocks_count(t_env *e)
+{
+	char	**ptr;
+	char	*p;
+
+	e->blocks = 0;
+	ptr = e->map;
+	while (*ptr)
+	{
+		p = *ptr;
+		while (*p)
+		{
+			if (*p > 1 && *p <= 5)
+				e->blocks++;
+			p++;
+		}
+		ptr++;
+	}
+}
+
 void		get_map(t_env *e, int fd, char *file)
 {
 	int		nbl;
-	char	**map;
 	char	*line;
 	int		i;
 
@@ -47,7 +66,8 @@ void		get_map(t_env *e, int fd, char *file)
 	while (gnl(fd, &line) > 0)
 		nbl++, free(line);
 	close(fd);
-	map = (char **)malloc(sizeof(char *) * (nbl + 1));
+	if (!(e->map = (char **)malloc(sizeof(char *) * (nbl + 1))))
+		return ;
 	i = 0;
 	if ((fd = open(file, O_RDONLY)) <= 0)
 		write(1, "Map does not exist\n", 19), exit (-1);
@@ -57,9 +77,9 @@ void		get_map(t_env *e, int fd, char *file)
 			nbl = ft_strlen(line);
 		else if (nbl != (int)ft_strlen(line) && *line)
 			write(1, "Invalid map\n", 12), close(fd), exit(-1);
-		map[i] = ft_strdup(line);
+		e->map[i] = ft_strdup(line);
 		i++, free(line);
 	}
-	map[i] = NULL, close(fd);
-	e->map = map;
+	e->map[i] = NULL, close(fd);
+	ft_blocks_count(e);
 }

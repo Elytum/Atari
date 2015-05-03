@@ -49,6 +49,10 @@ typedef struct		s_env
 	double			fy;
 	double			sy;
 	double			py;
+	char			alive;
+	char			lives;
+	char			launched;
+	int				blocks;
 }					t_env;
 
 int					gnl(int const fd, char **line);
@@ -96,7 +100,7 @@ void				ft_playsound(char sound);
 **Events
 */
 void				refresh_frame(GLFWwindow *window);
-void				ft_check_lost(t_env *e, GLFWwindow *window);
+void				ft_check_lost(t_env *e);
 void				error_callback(int error, const char *description);
 void				key_callback(GLFWwindow *window, int key, int scancode,
 								int action, int mods);

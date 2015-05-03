@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <atari.h>
+#include <unistd.h>
 
 void					draw_circle(float x, float y, float radius)
 {
@@ -36,27 +37,41 @@ void					draw_circle(float x, float y, float radius)
 	glPopMatrix();
 }
 
-void					ft_draw_sphere(t_env *e)
+void					ft_launched_sphere(t_env *e)
 {
 	double				r;
 
-	e->vecbally -= 0.0000005;
+	e->vecbally -= 0.000002;
 	if (e->vecbally < 0)
 	{
 		e->speed *= 1.001;
-		e->vecbally -= 0.0000005;
+		e->vecbally *= 1.0000005;
 	}
 	else
 	{
-		e->speed /= 1.00099;
+		e->speed /= 1.0009975;
 		e->vecballx *= 1.0000005;
 	}
+	if (e->speed < 0.25)
+		e->speed = 0.25;
 	r = ft_sqrt(e->vecballx * e->vecballx + e->vecbally * e->vecbally);
 	e->vecballx = e->vecballx / r;
 	e->vecbally = e->vecbally / r;
 	e->pasballx = e->posballx;
 	e->pasbally = e->posbally;
-	e->posballx += e->vecballx / 500 * e->speed;
-	e->posbally += e->vecbally / 500 * e->speed;
+	e->posballx += e->vecballx / 400 * e->speed;
+	e->posbally += e->vecbally / 400 * e->speed;
+}
+
+void					ft_draw_sphere(t_env *e)
+{
+
+	if (e->launched)
+		ft_launched_sphere(e);
+	else
+	{
+		e->posballx = e->transpos * 0.01f;
+		e->posbally = -0.98;
+	}
 	draw_circle(e->posballx, e->posbally, e->r);
 }

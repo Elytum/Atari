@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   math.c                                             :+:      :+:    :+:   */
+/*   events.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: achazal <achazal@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -45,19 +45,22 @@ void			key_callback(GLFWwindow *window, int key,
 		if (e->transpos > -100 + 20)
 			e->transpos -= 10;
 	}
+	else if (key == GLFW_KEY_SPACE && (action == GLFW_PRESS ||
+		action == GLFW_REPEAT))
+	{
+		if (!e->launched)
+			e->launched = 1;
+	}
 	(void)scancode;
 	(void)mods;
 }
 
-void			ft_game_loop(t_env *e, GLFWwindow *window)
+void			ft_launch(t_env *e, GLFWwindow *window)
 {
-	while (!glfwWindowShouldClose(window))
+	e->launched = 0;
+	while (!e->launched && !glfwWindowShouldClose(window))
 	{
 		refresh_frame(window);
-		ft_check_collision(e);
-		ft_check_collision_map(e);
-		ft_check_collision_barre(e);
-		ft_check_lost(e, window);
 		ft_draw_sphere(e);
 		ft_draw_bricks(e);
 		ft_draw_pad(e);
@@ -66,22 +69,29 @@ void			ft_game_loop(t_env *e, GLFWwindow *window)
 	}
 }
 
-void			ft_end(void)
+void			ft_game_loop(t_env *e, GLFWwindow *window)
 {
-	glfwDestroyWindow(get_window(NULL));
-	glfwTerminate();
-	exit(EXIT_SUCCESS);
-}
-
-void			ft_init(t_env *e, GLFWwindow *window)
-{
-	get_window(window);
-	get_singleton(e);
-	e->transpos = 0;
-	e->posballx = .95;
-	e->posbally = -.2;
-	e->vecballx = -0.002f;
-	e->vecbally = 0.002f;
-	e->r = 0.01;
-	e->speed = 0.9;
+	e->lives = 3;
+	while (e->lives > 0 && !glfwWindowShouldClose(window))
+	{
+		e->alive = 1;
+		ft_init(e, window);
+		ft_launch(e, window);
+		while (e->blocks > 0 && e->alive > 0 &&
+			!glfwWindowShouldClose(window))
+		{
+			refresh_frame(window);
+			ft_draw_sphere(e);
+			ft_draw_bricks(e);
+			ft_draw_pad(e);
+			ft_check_collision(e);
+			ft_check_collision_map(e);
+			ft_check_collision_barre(e);
+			ft_check_lost(e);
+			glfwSwapBuffers(window);
+			glfwPollEvents();
+		}
+		if (e->alive == 0)
+			e->lives--;
+	}
 }

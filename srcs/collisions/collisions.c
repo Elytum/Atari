@@ -29,11 +29,6 @@ void		ft_check_collision_map(t_env *e)
 		e->posbally = e->posbally - ((e->posbally - 1) * 2);
 		e->vecbally = -e->vecbally;
 	}
-	else if (e->posbally <= -1)
-	{
-		e->posbally = e->posbally + ((-e->posbally - 1) * 2);
-		e->vecbally = -e->vecbally;
-	}
 }
 
 static void	ft_check_collision_barre_left(t_env *e)

@@ -29,7 +29,11 @@ static char			ft_collision_left(t_env *e, int i, int j)
 			e->posballx = e->fx + e->px;
 			e->vecballx = -e->vecballx;
 			if (e->map[i][j] > 1)
+			{
 				e->map[i][j]--;
+				if (e->map[i][j] == 1)
+					e->blocks--;
+			}
 			e->speed *= 1.00005;
 			ft_playsound(BLOCK_DESTRUCT);
 			return (1);
@@ -53,7 +57,11 @@ static char			ft_collision_right(t_env *e, int i, int j)
 			e->posballx = e->fx + e->sx - e->px;
 			e->vecballx = -e->vecballx;
 			if (e->map[i][j] > 1)
+			{
 				e->map[i][j]--;
+				if (e->map[i][j] == 1)
+					e->blocks--;
+			}
 			e->speed *= 1.00005;
 			ft_playsound(BLOCK_DESTRUCT);
 			return (1);
@@ -76,7 +84,11 @@ static char			ft_collision_down(t_env *e, int i, int j)
 			e->posbally = e->fy + e->py;
 			e->vecbally = -e->vecbally;
 			if (e->map[i][j] > 1)
+			{
 				e->map[i][j]--;
+				if (e->map[i][j] == 1)
+					e->blocks--;
+			}
 			e->speed *= 1.00005;
 			ft_playsound(BLOCK_DESTRUCT);
 			return (1);
@@ -100,7 +112,11 @@ static char			ft_collision_up(t_env *e, int i, int j)
 			e->posbally = e->fy + e->sy - e->py;
 			e->vecbally = -e->vecbally;
 			if (e->map[i][j] > 1)
+			{
 				e->map[i][j]--;
+				if (e->map[i][j] == 1)
+					e->blocks--;
+			}
 			e->speed *= 1.00005;
 			ft_playsound(BLOCK_DESTRUCT);
 			return (1);

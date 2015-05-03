@@ -15,10 +15,10 @@
 #include <stdlib.h>
 #include <signal.h>
 
-void			ft_check_lost(t_env *e, GLFWwindow *window)
+void			ft_check_lost(t_env *e)
 {
 	if (e->posbally <= -1)
-		glfwSetWindowShouldClose(window, GL_TRUE);
+		e->alive = 0;
 }
 
 void			refresh_frame(GLFWwindow *window)

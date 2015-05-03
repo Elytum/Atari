@@ -30,7 +30,8 @@ FILES =	main.c				\
 		collisions/collisions.c \
 		collisions/bricks_col.c \
 		sound/play_sounds.c		\
-		events/events.c
+		events/events.c			\
+		events/events2.c
 
 OBJECT = $(patsubst %.c,%.o,$(FILES))
 OBJ = $(addprefix $(BASEDIR)/, $(OBJECT))
