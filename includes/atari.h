@@ -78,4 +78,15 @@ Sound
 */
 void				ft_playsound(char sound);
 
+/*
+Events
+*/
+void				refresh_frame(GLFWwindow *window);
+void				ft_check_lost(t_env *e, GLFWwindow *window);
+void				error_callback(int error, const char *description);
+void				key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+void				ft_init(t_env *e, GLFWwindow *window);
+void				ft_game_loop(t_env *e, GLFWwindow *window);
+void				ft_end(void);
+
 #endif

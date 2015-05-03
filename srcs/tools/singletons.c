@@ -29,4 +29,3 @@ GLFWwindow	*get_window(GLFWwindow *window)
 		save = window;
 	return (save);
 }
-
