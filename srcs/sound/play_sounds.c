@@ -12,12 +12,8 @@
 
 #include <stdlib.h>
 #include <atari.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <signal.h>
-#include <sys/wait.h>
 #include <unistd.h>
-#include <sys/errno.h>
 #include <time.h>
 #include <fcntl.h>
 
