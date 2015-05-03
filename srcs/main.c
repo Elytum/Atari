@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <atari.h>
+#include <libft.h>
 #include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <signal.h>

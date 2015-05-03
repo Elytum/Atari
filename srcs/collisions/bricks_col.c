@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <atari.h>
+#include <libft.h>
 
 static char			ft_collision_left(t_env *e, int i, int j)
 {

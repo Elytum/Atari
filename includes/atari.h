@@ -2,9 +2,6 @@
 # define ATARI_H
 # define BUFF_SIZE 128
 
-# include <sys/types.h>
-# include <sys/uio.h>
-# include "../libft/libft.h"
 # define BLOCK_DESTRUCT 1
 # define M_PI 3.14159265358979323846
 

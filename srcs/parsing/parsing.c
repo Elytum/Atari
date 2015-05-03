@@ -12,6 +12,7 @@
 
 #include <atari.h>
 #include <fcntl.h>
+#include <libft.h>
 
 void		print_map(t_env *e)
 {

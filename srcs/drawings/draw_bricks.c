@@ -12,6 +12,7 @@
 
 #include <atari.h>
 #include <GLFW/glfw3.h>
+#include <libft.h>
 
 static void	ft_draw_brick(t_env *e, int i, int j)
 {
@@ -40,14 +41,14 @@ void		ft_draw_bricks(t_env *e)
 	int		i;
 	int		j;
 
-	i = 0;
-	e->sx = 2 / (double)ft_strlen(e->map[i]);
+	e->sx = 2 / (double)ft_strlen(e->map[0]);
 	e->px = e->sx / 42;
 	e->sy = 0;
 	while (e->map[(int)e->sy])
 		e->sy++;
 	e->sy = (2 / (e->sy - 1)) / 2;
 	e->py = e->sy / 42;
+	i = 0;
 	while (e->map[i])
 	{
 		j = 0;

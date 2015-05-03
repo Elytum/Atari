@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <atari.h>
+#include <libft.h>
 
 static void			ft_addbuf(char **save, char *buf, int ret)
 {

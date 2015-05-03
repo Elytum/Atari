@@ -14,7 +14,7 @@
 
 t_env		*get_singleton(t_env *e)
 {
-	static t_env	*l = NULL;
+	static t_env	*l = 0x00000000;
 
 	if (e)
 		l = e;
