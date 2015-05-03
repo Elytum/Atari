@@ -1,11 +1,11 @@
 #ifndef ATARI_H
-#define ATARI_H
+# define ATARI_H
 # define BUFF_SIZE 128
 
 # include <sys/types.h>
 # include <sys/uio.h>
-# include <fcntl.h>
 # include "../libft/libft.h"
+# define BLOCK_DESTRUCT 1
 
 typedef struct		s_save
 {
@@ -63,4 +63,11 @@ Check collisions
 */
 void				ft_check_collision_map(t_env *e);
 void				ft_check_collision_barre(t_env *e);
+void				ft_check_collision(t_env *e);
+
+/*
+Sound
+*/
+void				ft_playsound(char sound);
+
 #endif

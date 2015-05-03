@@ -9,10 +9,6 @@
 #include <sys/errno.h>
 #include <time.h>
 
-#define BLOCK_DESTRUCT 1
-char	*BLOCK_SOUNDS[5] = {"travail_termine.mp3", "travail_termine.mp3",
-			"travail_termine.mp3", "peon_travail.mp3", "peon_travail.mp3"};
-
 static void error_callback(int error, const char* description)
 {
     fputs(description, stderr);
@@ -40,29 +36,6 @@ static void key_callback(GLFWwindow* window, int key, int scancode, int action, 
     (void)mods;
 }
 
-void	ft_playsound(char sound)
-{
-	static char *buff[3] = {"/usr/bin/afplay", NULL, NULL};
-	static int cpid_saved = 0;
-	int		r;
-
-	if (sound == BLOCK_DESTRUCT)
-	{
-		if (cpid_saved > 0)
-			kill (cpid_saved, 9);
-		srand(time(NULL));
-		r = rand() % 5;
-		buff[1] = BLOCK_SOUNDS[r];
-		cpid_saved = fork();
-	}
-	if (cpid_saved != -1)
-	{
-		if (cpid_saved == 0)
-			execv(buff[0], buff);
-		else
-			waitpid(-1, NULL, O_NONBLOCK);
-	}
-}
 
 // void	ft_playpermasound(char sound)
 // {
@@ -92,98 +65,6 @@ void	ft_playsound(char sound)
 // }
 
 
-void	ft_check_collision(t_env *e)
-{
-	int		i;
-	int		j;
-	double	fx;
-	double	sx;
-	double	px;
-	double	fy;
-	double	sy;
-	double	py;
-	double	t;
-
-	i = 0;
-	sx = 2 / (double)ft_strlen(e->map[i]);
-	px = sx / 42;
-	sy = 0;
-
-	while (e->map[(int)sy])
-		sy++;
-	sy = (2 / (sy - 1)) / 2;
-	py = sy / 42;
-	while (e->map[i])
-	{
-		j = 0;
-		while (e->map[i][j])
-		{
-			if (e->map[i][j] != 1)
-			{
-				fx = -1 + j * sx;
-				fy = 1 - (i + 1) * sy;
-				if (e->pasballx < fx + px && e->posballx > fx + px) //LEFT
-				{
-					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + px - e->pasballx)) + e->pasbally;
-					if (fy + py <= t && fy + sy - py >= t)
-					{
-						e->posbally = t;
-						e->posballx = fx + px;
-						e->vecballx = -e->vecballx;
-						if (e->map[i][j] > 1)
-							e->map[i][j]--;
-						e->speed *= 1.00005;
-						ft_playsound(BLOCK_DESTRUCT);
-					}
-				}
-				if (e->pasballx > fx + sx - px && e->posballx < fx + sx - px) //RIGHT
-				{
-					t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) * (fx + sx - px - e->pasballx)) + e->pasbally;
-					if (fy + py <= t && fy + sy - py >= t)
-					{
-						e->posbally = t;
-						e->posballx = fx + sx - px;
-						e->vecballx = -e->vecballx;
-						if (e->map[i][j] > 1)
-							e->map[i][j]--;
-						e->speed *= 1.00005;
-						ft_playsound(BLOCK_DESTRUCT);
-					}
-				}
-				if (e->pasbally < fy + py && e->posbally > fy + py) //DOWN
-				{
-					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + py - e->pasbally)) + e->pasballx;
-					if (t >= fx + px && fx + sx - px >= t)
-					{
-						e->posballx = t;
-						e->posbally = fy + py;
-						e->vecbally = -e->vecbally;
-						if (e->map[i][j] > 1)
-							e->map[i][j]--;
-						e->speed *= 1.00005;
-						ft_playsound(BLOCK_DESTRUCT);
-					}
-				}
-				if (e->pasbally > fy + sy - py && e->posbally < fy + sy - py) //UP
-				{
-					t = (((e->posballx - e->pasballx) / (e->posbally - e->pasbally)) * (fy + sy - py - e->pasbally)) + e->pasballx;
-					if (fx + px <= t && fx + sx - px >= t)
-					{
-						e->posballx = t;
-						e->posbally = fy + sy - py;
-						e->vecbally = -e->vecbally;
-						if (e->map[i][j] > 1)
-							e->map[i][j]--;
-						e->speed *= 1.00005;
-						ft_playsound(BLOCK_DESTRUCT);
-					}
-				}
-			}
-		    j++;	
-		}
-		i++;
-	}
-}
 
 
 void	ft_check_lost(t_env *e, GLFWwindow* window)

@@ -26,7 +26,9 @@ FILES =	main.c				\
 		drawings/draw_bricks.c \
 		drawings/draw_brick_1.c \
 		drawings/draw_brick_2.c \
-		collisions/collisions.c
+		collisions/collisions.c \
+		collisions/bricks_col.c \
+		sound/play_sounds.c
 
 OBJECT = $(patsubst %.c,%.o,$(FILES))
 OBJ = $(addprefix $(BASEDIR)/, $(OBJECT))
