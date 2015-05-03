@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include <atari.h>
-#include <GLFW/glfw3.h>
 #include <math.h>
 
 void					draw_circle(float x, float y, float radius)

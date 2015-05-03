@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include <atari.h>
-#include <GLFW/glfw3.h>
 #include <libft.h>
 
 static void	ft_draw_brick(t_env *e, int i, int j)

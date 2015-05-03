@@ -12,7 +12,6 @@
 
 #include <atari.h>
 #include <libft.h>
-#include <GLFW/glfw3.h>
 #include <stdlib.h>
 #include <signal.h>
 
@@ -70,37 +69,11 @@ void			refresh_frame(GLFWwindow *window)
 	glLoadIdentity();
 }
 
-int				main(void)
+void			ft_game_loop(t_env *e)
 {
-	int			i;
-	t_env		*e;
 	GLFWwindow	*window;
 
-	i = -1;
-	e = (t_env *)malloc(sizeof(t_env));
-	e->map = NULL;
-	get_map(e, i, "./level/0.lvl");
-	print_map(e);
-	glfwSetErrorCallback(error_callback);
-	if (!glfwInit())
-		exit(EXIT_FAILURE);
-	window = glfwCreateWindow(1000, 1000, "Arkanoid", NULL, NULL);
-	if (!window)
-	{
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
-	glfwMakeContextCurrent(window);
-	glfwSwapInterval(0);
-	e->transpos = 0;
-	glfwSetKeyCallback(window, key_callback);
-	get_singleton(e);
-	e->posballx = .95;
-	e->posbally = -.2;
-	e->vecballx = -0.002f;
-	e->vecbally = 0.002f;
-	e->r = 0.01;
-	e->speed = 0.9;
+	window = get_window(NULL);
 	while (!glfwWindowShouldClose(window))
 	{
 		refresh_frame(window);
@@ -114,7 +87,57 @@ int				main(void)
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
-	glfwDestroyWindow(window);
+}
+
+void			ft_init_ball(t_env *e)
+{
+	e->posballx = .95;
+	e->posbally = -.2;
+	e->vecballx = -0.002f;
+	e->vecbally = 0.002f;
+	e->r = 0.01;
+	e->speed = 1;
+}
+
+void			ft_end_game()
+{
+	glfwDestroyWindow(get_window(NULL));
 	glfwTerminate();
 	exit(EXIT_SUCCESS);
+}
+
+int				main(void)
+{
+	int			i;
+	t_env		*e;
+	GLFWwindow	*window;
+
+	i = -1;
+	if (!(e = (t_env *)malloc(sizeof(t_env))))
+		return (-1);
+	e->map = NULL;
+	if (!(get_map(e, i, "./level/0.lvl")))
+	{
+		write(1, "Couldn't open file ./level/0.lvl or the map is invalid\n", 55);
+		return (-1);
+	}
+	print_map(e);
+	glfwSetErrorCallback(error_callback);
+	if (!glfwInit())
+		exit(EXIT_FAILURE);
+	if (!(window = glfwCreateWindow(1000, 1000, "Arkanoid", NULL, NULL)))
+	{
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+	get_window(window);
+	glfwMakeContextCurrent(window);
+	glfwSwapInterval(0);
+	e->transpos = 0;
+	glfwSetKeyCallback(window, key_callback);
+	get_singleton(e);
+	ft_init_ball(e);
+	ft_game_loop(e);
+	ft_end_game();
+	return (0);
 }

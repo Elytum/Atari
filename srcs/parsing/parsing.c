@@ -35,7 +35,7 @@ void		print_map(t_env *e)
 	}
 }
 
-void		get_map(t_env *e, int fd, char *file)
+char		get_map(t_env *e, int fd, char *file)
 {
 	int		nbl;
 	char	**map;
@@ -43,7 +43,8 @@ void		get_map(t_env *e, int fd, char *file)
 	int		i;
 
 	nbl = 0;
-	fd = open(file, O_RDONLY);
+	if ((fd = open(file, O_RDONLY)) <= 0)
+		return (0);
 	while (gnl(fd, &line) > 0)
 		nbl++, free(line);
 	close(fd);
@@ -62,4 +63,5 @@ void		get_map(t_env *e, int fd, char *file)
 	}
 	map[i] = NULL, close(fd);
 	e->map = map;
+	return (1);
 }
