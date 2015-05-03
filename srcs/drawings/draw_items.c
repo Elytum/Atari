@@ -13,7 +13,7 @@
 #include <atari.h>
 #include <GLFW/glfw3.h>
 
-void		aff_bare(t_env *e)
+void		ft_draw_pad(t_env *e)
 {
 	glPushMatrix();
 	glTranslatef((double)e->transpos * 0.01f, 0.f, 0.f);

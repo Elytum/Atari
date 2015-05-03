@@ -6,6 +6,7 @@
 # include <sys/uio.h>
 # include "../libft/libft.h"
 # define BLOCK_DESTRUCT 1
+# define M_PI 3.14159265358979323846
 
 typedef struct		s_save
 {
@@ -47,7 +48,7 @@ double				ft_abs(double v);
 /*
 Draw functions
 */
-void				aff_bare(t_env *e);
+void				ft_draw_pad(t_env *e);
 void				ft_draw_background(void);
 void				ft_draw_bricks(t_env *e);
 void				ft_draw_brick_2(t_env *e);
@@ -64,6 +65,7 @@ Check collisions
 void				ft_check_collision_map(t_env *e);
 void				ft_check_collision_barre(t_env *e);
 void				ft_check_collision(t_env *e);
+void				ft_draw_sphere(t_env *e);
 
 /*
 Sound

@@ -74,88 +74,6 @@ void	ft_check_lost(t_env *e, GLFWwindow* window)
 }
 
 
-void		aff_sphere(t_env *e)
-{
-	// double	x;
-	// double	y;
-	double	r;
-
-	e->vecbally -= 0.0000005;
-	if (e->vecbally < 0)
-	{
-		e->speed *= 1.001;
-		e->vecbally -= 0.0000005;
-	}
-	else
-	{
-		e->speed /= 1.00099;
-		e->vecballx *= 1.0000005;
-	}
-	r = sqrt(e->vecballx * e->vecballx + e->vecbally * e->vecbally);
-	e->vecballx = e->vecballx / r;
-	e->vecbally = e->vecbally / r;
-	e->pasballx = e->posballx;
-	e->pasbally = e->posbally;
-	e->posballx	+= e->vecballx / 500 * e->speed;
-	e->posbally += e->vecbally / 500 * e->speed;
-	glPushMatrix();
-	glTranslatef((double) e->posballx * 1.0, e->posbally * 1.0, 0.f);
-
-
-
-	double	slices = 20;
-	glBegin(GL_TRIANGLES);
-	const double delta_eta = M_PI / slices;
-
-	// Outer (eta) Loop: Iterate over longitude (north-to-south).
-	// Inner (theta) Loop: Iterate over latitude (east-to-west)
-	glColor3f(1.f, 0.f, 0.f);
-	for ( double eta0 = 0; eta0 < M_PI - 0.0001 - delta_eta; eta0 += delta_eta )
-    {
-      const double eta1 = eta0 + delta_eta;
-      const double  y0 = cos(eta0),        y1 = cos(eta1);
-      const double slice_r0 = sin(eta0),  slice_r1 = sin(eta1);
-      const double delta_theta = delta_eta * slice_r1;
-
-      for ( double theta = 0; theta < 2 * M_PI; theta += delta_theta )
-        {
-          const double theta1 = theta + delta_theta;
-
-          /// Triangle 1
-
-          // Vertex 1
-          glNormal3f( slice_r1 * cos(theta), y1, slice_r1 * sin(theta) );
-          glVertex3f( slice_r1 * cos(theta) / (1 / e->r), y1/ (1 / e->r), slice_r1 * sin(theta) / (1 / e->r));
-
-          // Vertex 2
-          glNormal3f( slice_r0 * cos(theta), y0, slice_r0 * sin(theta) );
-          glVertex3f( slice_r0 * cos(theta) / (1 / e->r), y0/ (1 / e->r), slice_r0 * sin(theta) / (1 / e->r));
-
-          // Vertex 3      
-          glNormal3f( slice_r1 * cos(theta1), y1, slice_r1 * sin(theta1) );
-          glVertex3f( slice_r1 * cos(theta1) / (1 / e->r), y1/ (1 / e->r), slice_r1 * sin(theta1)/ (1 / e->r) );
-
-          /// Triangle 2
-
-          // Vertex 3      
-          glNormal3f( slice_r1 * cos(theta1), y1, slice_r1 * sin(theta1) );
-          glVertex3f( slice_r1 * cos(theta1) / (1 / e->r), y1/ (1 / e->r), slice_r1 * sin(theta1)/ (1 / e->r) );
-
-          // Vertex 2
-          glNormal3f( slice_r0 * cos(theta), y0, slice_r0 * sin(theta) );
-          glVertex3f( slice_r0 * cos(theta) / (1 / e->r), y0/ (1 / e->r), slice_r0 * sin(theta) / (1 / e->r));
-
-          // Vertex 4
-          glNormal3f( slice_r0 * cos(theta1), y0, slice_r0 * sin(theta1) );
-          glVertex3f( slice_r0 * cos(theta1) / (1 / e->r), y0/ (1 / e->r), slice_r0 * sin(theta1)/ (1 / e->r) );
-
-        }
-    }
-	glEnd();
-	glPopMatrix();
-}
-
-
 void		refresh_frame(GLFWwindow* window)
 {
 	double 	ratio;
@@ -218,9 +136,9 @@ int		main(void)
 		ft_check_collision_map(e); //
 		ft_check_collision_barre(e); //
 		ft_check_lost(e, window);
-        aff_sphere(e); //
+        ft_draw_sphere(e); //
 		ft_draw_bricks(e); //
-       	aff_bare(e); //
+       	ft_draw_pad(e); //
         glfwSwapBuffers(window); //
         glfwPollEvents(); //
         //usleep(20000);
