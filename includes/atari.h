@@ -1,7 +1,6 @@
 #ifndef ATARI_H
 # define ATARI_H
-
-# include <GLFW/glfw3.h>
+#include <GLFW/glfw3.h>
 # define BUFF_SIZE 128
 
 # define BLOCK_DESTRUCT 1
@@ -43,7 +42,7 @@ typedef struct		s_env
 
 int					gnl(int const fd, char **line);
 void				print_map(t_env *e);
-char				get_map(t_env *e, int fd, char *file);
+void				get_map(t_env *e, int fd, char *file);
 t_env				*get_singleton(t_env *e);
 GLFWwindow			*get_window(GLFWwindow *window);
 

@@ -12,16 +12,16 @@
 
 #include <atari.h>
 
-t_env					*get_singleton(t_env *e)
+t_env		*get_singleton(t_env *e)
 {
-	static t_env		*save = 0x00000000;
+	static t_env	*save = 0x00000000;
 
 	if (e)
 		save = e;
 	return (save);
 }
 
-GLFWwindow				*get_window(GLFWwindow *window)
+GLFWwindow	*get_window(GLFWwindow *window)
 {
 	static GLFWwindow	*save = 0x00000000;
 
@@ -29,3 +29,4 @@ GLFWwindow				*get_window(GLFWwindow *window)
 		save = window;
 	return (save);
 }
+

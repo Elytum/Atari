@@ -69,11 +69,8 @@ void			refresh_frame(GLFWwindow *window)
 	glLoadIdentity();
 }
 
-void			ft_game_loop(t_env *e)
+void			ft_game_loop(t_env *e, GLFWwindow *window)
 {
-	GLFWwindow	*window;
-
-	window = get_window(NULL);
 	while (!glfwWindowShouldClose(window))
 	{
 		refresh_frame(window);
@@ -89,21 +86,24 @@ void			ft_game_loop(t_env *e)
 	}
 }
 
-void			ft_init_ball(t_env *e)
+void			ft_end(void)
 {
+	glfwDestroyWindow(get_window(NULL));
+	glfwTerminate();
+	exit(EXIT_SUCCESS);
+}
+
+void			ft_init(t_env *e, GLFWwindow *window)
+{
+	get_window(window);
+	get_singleton(e);
+	e->transpos = 0;
 	e->posballx = .95;
 	e->posbally = -.2;
 	e->vecballx = -0.002f;
 	e->vecbally = 0.002f;
 	e->r = 0.01;
-	e->speed = 1;
-}
-
-void			ft_end_game()
-{
-	glfwDestroyWindow(get_window(NULL));
-	glfwTerminate();
-	exit(EXIT_SUCCESS);
+	e->speed = 0.9;
 }
 
 int				main(void)
@@ -116,11 +116,7 @@ int				main(void)
 	if (!(e = (t_env *)malloc(sizeof(t_env))))
 		return (-1);
 	e->map = NULL;
-	if (!(get_map(e, i, "./level/0.lvl")))
-	{
-		write(1, "Couldn't open file ./level/0.lvl or the map is invalid\n", 55);
-		return (-1);
-	}
+	get_map(e, i, "./level/0.lvl");
 	print_map(e);
 	glfwSetErrorCallback(error_callback);
 	if (!glfwInit())
@@ -130,14 +126,11 @@ int				main(void)
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-	get_window(window);
+	ft_init(e, window);
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(0);
-	e->transpos = 0;
 	glfwSetKeyCallback(window, key_callback);
-	get_singleton(e);
-	ft_init_ball(e);
-	ft_game_loop(e);
-	ft_end_game();
+	ft_game_loop(e, window);
+	ft_end();
 	return (0);
 }
