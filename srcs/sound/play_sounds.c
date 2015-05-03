@@ -20,15 +20,26 @@
 #include <sys/errno.h>
 #include <time.h>
 #include <fcntl.h>
-	
-void	ft_playsound(char sound)
+
+char			*ft_getblock_trach(int id)
 {
-	static char *block_sounds[5] = {"travail_termine.mp3",
-	"travail_termine.mp3", "travail_termine.mp3", "peon_travail.mp3",
-	"peon_travail.mp3"};
-	static char *buff[3] = {"/usr/bin/afplay", NULL, NULL};
-	static int cpid_saved = 0;
-	int		r;
+	if (id == 0)
+		return ("travail_termine.mp3");
+	else if (id == 1)
+		return ("travail_termine.mp3");
+	else if (id == 2)
+		return ("travail_termine.mp3");
+	else if (id == 3)
+		return ("peon_travail.mp3");
+	else
+		return ("peon_travail.mp3");
+}
+
+void			ft_playsound(char sound)
+{
+	int			r;
+	static int	cpid_saved = 0;
+	static char	*buff[3] = {"/usr/bin/afplay", NULL, NULL};
 
 	if (sound == BLOCK_DESTRUCT)
 	{
@@ -36,7 +47,7 @@ void	ft_playsound(char sound)
 			kill (cpid_saved, 9);
 		srand(time(NULL));
 		r = rand() % 5;
-		buff[1] = block_sounds[r];
+		buff[1] = ft_getblock_trach(r);
 		cpid_saved = fork();
 	}
 	if (cpid_saved != -1)
