@@ -11,7 +11,6 @@
 /* ************************************************************************** */
 
 #include <atari.h>
-#include <math.h>
 
 void					draw_circle(float x, float y, float radius)
 {
@@ -25,11 +24,11 @@ void					draw_circle(float x, float y, float radius)
 	glBegin(GL_POLYGON);
 	angle1 = 0.0;
 	glColor3f(0.f, 1.f, 0.f);
-	glVertex2d(radius * cos(0.0), radius * ft_sin(0.0));
+	glVertex2d(radius * ft_cos(0.0), radius * ft_sin(0.0));
 	i = 0;
 	while (i < circle_points)
 	{
-		glVertex2d(radius * cos(angle1), radius * ft_sin(angle1));
+		glVertex2d(radius * ft_cos(angle1), radius * ft_sin(angle1));
 		angle1 += angle;
 		i++;
 	}
