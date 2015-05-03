@@ -1,10 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   bricks_col.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: achazal <achazal@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2015/05/03 04:07:02 by achazal           #+#    #+#             */
+/*   Updated: 2015/05/03 04:07:04 by achazal          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef ATARI_H
 # define ATARI_H
-#include <GLFW/glfw3.h>
 # define BUFF_SIZE 128
-
 # define BLOCK_DESTRUCT 1
 # define M_PI 3.14159265358979323846
+# include <GLFW/glfw3.h>
 
 typedef struct		s_save
 {
@@ -47,12 +58,12 @@ t_env				*get_singleton(t_env *e);
 GLFWwindow			*get_window(GLFWwindow *window);
 
 /*
-Math functions
+**Math functions
 */
 double				ft_abs(double v);
 
 /*
-Draw functions
+**Draw functions
 */
 void				ft_draw_pad(t_env *e);
 void				ft_draw_background(void);
@@ -66,7 +77,7 @@ void				ft_draw_brick__2(t_env *e);
 void				ft_draw_brick__3(t_env *e);
 
 /*
-Check collisions
+**Check collisions
 */
 void				ft_check_collision_map(t_env *e);
 void				ft_check_collision_barre(t_env *e);
@@ -74,17 +85,18 @@ void				ft_check_collision(t_env *e);
 void				ft_draw_sphere(t_env *e);
 
 /*
-Sound
+**Sound
 */
 void				ft_playsound(char sound);
 
 /*
-Events
+**Events
 */
 void				refresh_frame(GLFWwindow *window);
 void				ft_check_lost(t_env *e, GLFWwindow *window);
 void				error_callback(int error, const char *description);
-void				key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
+void				key_callback(GLFWwindow *window, int key, int scancode,
+								int action, int mods);
 void				ft_init(t_env *e, GLFWwindow *window);
 void				ft_game_loop(t_env *e, GLFWwindow *window);
 void				ft_end(void);
