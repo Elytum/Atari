@@ -61,6 +61,8 @@ GLFWwindow			*get_window(GLFWwindow *window);
 **Math functions
 */
 double				ft_abs(double v);
+double				ft_sqrt(const double n);
+double				ft_sin(const double x);
 
 /*
 **Draw functions
