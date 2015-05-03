@@ -13,7 +13,7 @@
 #include <atari.h>
 #include <GLFW/glfw3.h>
 
-static	void ft_draw_brick(t_env *e, int i, int j)
+static void	ft_draw_brick(t_env *e, int i, int j)
 {
 	glBegin(GL_QUADS);
 	e->fx = -1 + j * e->sx;
@@ -35,7 +35,7 @@ static	void ft_draw_brick(t_env *e, int i, int j)
 	glEnd();
 }
 
-void	ft_draw_bricks(t_env *e)
+void		ft_draw_bricks(t_env *e)
 {
 	int		i;
 	int		j;
@@ -55,7 +55,7 @@ void	ft_draw_bricks(t_env *e)
 		{
 			if (e->map[i][j] != 1)
 				ft_draw_brick(e, i, j);
-		    j++;	
+			j++;
 		}
 		i++;
 	}

@@ -51,24 +51,24 @@ void	ft_draw_brick__1(t_env *e)
 
 void	ft_draw_brick_5(t_env *e)
 {
-	glColor3f(0.2f * 6.f/10.f, 0.2f * 6.f/10.f, 0.2f * 6.f/10.f);
+	glColor3f(0.2f * 6.f / 10.f, 0.2f * 6.f / 10.f, 0.2f * 6.f / 10.f);
 	glVertex3f(e->fx + e->px, e->fy + e->sy - e->py, 0.f);
 	glColor3f(0.2f, 0.2f, 0.2f);
 	glVertex3f(e->fx + e->px, e->fy + e->py, 0.f);
 	glColor3f(0.2f, 0.2f, 0.2f);
 	glVertex3f(e->fx + e->sx - e->px, e->fy + e->py, 0.f);
-	glColor3f(0.2f * 10.f/6.f, 0.2f * 10.f/6.f, 0.2f * 10.f/6.f);
+	glColor3f(0.2f * 10.f / 6.f, 0.2f * 10.f / 6.f, 0.2f * 10.f / 6.f);
 	glVertex3f(e->fx + e->sx - e->px, e->fy + e->sy - e->py, 0.f);
 }
 
 void	ft_draw_brick_2(t_env *e)
 {
-	glColor3f(0.f, 0.5f * 6.f/10.f, 0.0f);
+	glColor3f(0.f, 0.5f * 6.f / 10.f, 0.0f);
 	glVertex3f(e->fx + e->px, e->fy + e->sy - e->py, 0.f);
 	glColor3f(0.f, 0.5f, 0.0f);
 	glVertex3f(e->fx + e->px, e->fy + e->py, 0.f);
 	glColor3f(0.f, 0.5f, 0.0f);
 	glVertex3f(e->fx + e->sx - e->px, e->fy + e->py, 0.f);
-	glColor3f(0.f, 0.5f * 10.f/6.f, 0.0f);
+	glColor3f(0.f, 0.5f * 10.f / 6.f, 0.0f);
 	glVertex3f(e->fx + e->sx - e->px, e->fy + e->sy - e->py, 0.f);
 }
