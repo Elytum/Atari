@@ -65,7 +65,6 @@ void					ft_launched_sphere(t_env *e)
 
 void					ft_draw_sphere(t_env *e)
 {
-
 	if (e->launched)
 		ft_launched_sphere(e);
 	else

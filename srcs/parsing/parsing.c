@@ -14,11 +14,11 @@
 #include <fcntl.h>
 #include <libft.h>
 
-void		print_map(t_env *e)
+void			print_map(t_env *e)
 {
-	int		i;
-	int		j;
-	char	lol;
+	int			i;
+	int			j;
+	char		lol;
 
 	i = 0;
 	while (e->map[i])
@@ -35,10 +35,10 @@ void		print_map(t_env *e)
 	}
 }
 
-void		ft_blocks_count(t_env *e)
+void			ft_blocks_count(t_env *e)
 {
-	char	**ptr;
-	char	*p;
+	char		**ptr;
+	char		*p;
 
 	e->blocks = 0;
 	ptr = e->map;
@@ -55,31 +55,72 @@ void		ft_blocks_count(t_env *e)
 	}
 }
 
-void		get_map(t_env *e, int fd, char *file)
+char			*ft_get_path(t_env *e)
 {
-	int		nbl;
-	char	*line;
-	int		i;
+	char		id;
 
-	nbl = 0;
-	fd = open(file, O_RDONLY);
-	while (gnl(fd, &line) > 0)
-		nbl++, free(line);
-	close(fd);
-	if (!(e->map = (char **)malloc(sizeof(char *) * (nbl + 1))))
-		return ;
-	i = 0;
-	if ((fd = open(file, O_RDONLY)) <= 0)
+	id = e->id++;
+	if (e->id == 0)
+		return ("./level/0.lvl");
+	if (e->id == 1)
+		return ("./level/1.lvl");
+	if (e->id == 2)
+		return ("./level/2.lvl");
+	if (e->id == 3)
+		return ("./level/3.lvl");
+	if (e->id == 4)
+		return ("./level/4.lvl");
+	if (e->id == 5)
+		return ("./level/5.lvl");
+	if (e->id == 6)
+		return ("./level/6.lvl");
+	if (e->id == 7)
+		return ("./level/7.lvl");
+	if (e->id == 8)
+		return ("./level/8.lvl");
+	if (e->id == 9)
+		return ("./level/9.lvl");
+	write (1, "No more maps, congratulation !\n", 31), exit(EXIT_FAILURE);
+	return ("./level/0.lvl");
+}
+
+void			seek_map(t_env *e, char *path)
+{
+	int			fd;
+	int			nbl;
+	int			i;
+	char		*line;
+
+	if ((fd = open(path, O_RDONLY)) <= 0)
 		write(1, "Map does not exist\n", 19), exit (-1);
+	i = 0;
 	while (gnl(fd, &line) > 0)
 	{
 		if (i == 0)
 			nbl = ft_strlen(line);
 		else if (nbl != (int)ft_strlen(line) && *line)
 			write(1, "Invalid map\n", 12), close(fd), exit(-1);
-		e->map[i] = ft_strdup(line);
-		i++, free(line);
+		e->map[i] = ft_strdup(line), i++, free(line);
 	}
 	e->map[i] = NULL, close(fd);
+}
+
+void			get_map(t_env *e)
+{
+	char		*line;
+	int			fd;
+	int			nbl;
+	char		*path;
+
+	path = ft_get_path(e);
+	nbl = 0;
+	if ((fd = open(path, O_RDONLY)) <= 0)
+		return ;
+	while (gnl(fd, &line) > 0)
+		nbl++, free(line);
+	close(fd);
+	if (!(e->map = (char **)malloc(sizeof(char *) * (nbl + 1))))
+		return ;
+	seek_map(e, path);
 	ft_blocks_count(e);
 }

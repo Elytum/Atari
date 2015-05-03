@@ -53,11 +53,12 @@ typedef struct		s_env
 	char			lives;
 	char			launched;
 	int				blocks;
+	char			id;
 }					t_env;
 
 int					gnl(int const fd, char **line);
 void				print_map(t_env *e);
-void				get_map(t_env *e, int fd, char *file);
+void				get_map(t_env *e);
 t_env				*get_singleton(t_env *e);
 GLFWwindow			*get_window(GLFWwindow *window);
 

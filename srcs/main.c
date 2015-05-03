@@ -41,15 +41,14 @@ void			refresh_frame(GLFWwindow *window)
 
 int				main(void)
 {
-	int			i;
 	t_env		*e;
 	GLFWwindow	*window;
 
-	i = -1;
 	if (!(e = (t_env *)malloc(sizeof(t_env))))
-		return (-1);
+		exit(EXIT_FAILURE);
 	e->map = NULL;
-	get_map(e, i, "./level/0.lvl");
+	e->id = 0;
+	get_map(e);
 	print_map(e);
 	glfwSetErrorCallback(error_callback);
 	if (!glfwInit())
