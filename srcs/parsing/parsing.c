@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "atari.h"
+#include <atari.h>
 #include <fcntl.h>
 
 void		print_map(t_env *e)

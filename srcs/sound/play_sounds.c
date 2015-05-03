@@ -24,15 +24,15 @@
 char			*ft_getblock_trach(int id)
 {
 	if (id == 0)
-		return ("travail_termine.mp3");
+		return ("sounds/travail_termine.mp3");
 	else if (id == 1)
-		return ("travail_termine.mp3");
+		return ("sounds/travail_termine.mp3");
 	else if (id == 2)
-		return ("travail_termine.mp3");
+		return ("sounds/travail_termine.mp3");
 	else if (id == 3)
-		return ("peon_travail.mp3");
+		return ("sounds/peon_travail.mp3");
 	else
-		return ("peon_travail.mp3");
+		return ("sounds/peon_travail.mp3");
 }
 
 void			ft_playsound(char sound)
