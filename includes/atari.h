@@ -33,6 +33,19 @@ typedef struct		s_env
 	double			fy;
 	double			sy;
 	double			py;
+
+	double			slices;
+	double			delta_eta;
+	double			eta0;
+	double			eta1;
+	double			y0;
+	double			y1;
+	double			slice_r0;
+	double			slice_r1;
+	double			delta_theta;
+	double			theta;
+	double			theta1;
+
 }					t_env;
 
 int					gnl(int const fd, char **line);

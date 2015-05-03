@@ -14,20 +14,66 @@
 #include <GLFW/glfw3.h>
 #include <math.h>
 
+// static void			ft_draw_sphere_part3(t_env *e)
+// {
+// 	glNormal3f( e->slice_r1 * cos(e->theta), e->y1, e->slice_r1 * sin(e->theta) );
+// 	glVertex3f( e->slice_r1 * cos(e->theta) / (1 / e->r), e->y1/ (1 / e->r), e->slice_r1 * sin(e->theta) / (1 / e->r));
+// 	glNormal3f( e->slice_r0 * cos(e->theta), e->y0, e->slice_r0 * sin(e->theta) );
+// 	glVertex3f( e->slice_r0 * cos(e->theta) / (1 / e->r), e->y0/ (1 / e->r), e->slice_r0 * sin(e->theta) / (1 / e->r));
+// 	glNormal3f( e->slice_r1 * cos(e->theta1), e->y1, e->slice_r1 * sin(e->theta1) );
+// 	glVertex3f( e->slice_r1 * cos(e->theta1) / (1 / e->r), e->y1/ (1 / e->r), e->slice_r1 * sin(e->theta1)/ (1 / e->r));
+// 	glNormal3f( e->slice_r1 * cos(e->theta1), e->y1, e->slice_r1 * sin(e->theta1) );
+// 	glVertex3f( e->slice_r1 * cos(e->theta1) / (1 / e->r), e->y1/ (1 / e->r), e->slice_r1 * sin(e->theta1)/ (1 / e->r));
+// 	glNormal3f( e->slice_r0 * cos(e->theta), e->y0, e->slice_r0 * sin(e->theta) );
+// 	glVertex3f( e->slice_r0 * cos(e->theta) / (1 / e->r), e->y0/ (1 / e->r), e->slice_r0 * sin(e->theta) / (1 / e->r));
+// 	glNormal3f( e->slice_r0 * cos(e->theta1), e->y0, e->slice_r0 * sin(e->theta1) );
+// 	glVertex3f( e->slice_r0 * cos(e->theta1) / (1 / e->r), e->y0/ (1 / e->r), e->slice_r0 * sin(e->theta1)/ (1 / e->r));
+// }
+
+// static void			ft_draw_sphere_part2(t_env *e)
+// {
+// 	e->slices = 20;
+// 	e->delta_eta = M_PI / e->slices;
+
+// 	glBegin(GL_TRIANGLES);
+// 	glColor3f(1.f, 0.f, 0.f);
+// 	e->eta0 = 0;
+// 	while (e->eta0 < M_PI - 0.0001 - e->delta_eta)
+// 	{
+// 		e->eta1 = e->eta0 + e->delta_eta;
+// 		e->y0 = cos(e->eta0), e->y1 = cos(e->eta1);
+// 		e->slice_r0 = sin(e->eta0), e->slice_r1 = sin(e->eta1);
+// 		e->delta_theta = e->delta_eta * e->slice_r1;
+// 		e->theta = 0;
+// 		while (e->theta < 2 * M_PI)
+// 		{
+// 			e->theta1 = e->theta + e->delta_theta;
+// 			ft_draw_sphere_part3(e);
+// 			e->theta += e->delta_theta;
+// 		}
+// 		e->eta0 += e->delta_eta;
+// 	}
+// 	glEnd();
+// 	glPopMatrix();
+
+// }
+
 static void			ft_draw_sphere_part2(t_env *e)
 {
-	const double	slices = 20;
-	const double 	delta_eta = M_PI / slices;
+	e->slices = 20;
+	e->delta_eta = M_PI / e->slices;
 
 	glBegin(GL_TRIANGLES);
 	glColor3f(1.f, 0.f, 0.f);
-	double eta0 = 0;
-	while (eta0 < M_PI - 0.0001 - delta_eta)
+	e->eta0 = 0;
+	while (e->eta0 < M_PI - 0.0001 - e->delta_eta)
 	{
-		const double eta1 = eta0 + delta_eta;
-		const double  y0 = cos(eta0), y1 = cos(eta1);
-		const double slice_r0 = sin(eta0),  slice_r1 = sin(eta1);
-		const double delta_theta = delta_eta * slice_r1;
+		e->eta1 = e->eta0 + e->delta_eta;
+		const double y0 = cos(e->eta0);
+		const double y1 = cos(e->eta1);
+		const double slice_r0 = sin(e->eta0);
+		const double slice_r1 = sin(e->eta1);
+		const double delta_theta = e->delta_eta * slice_r1;
 		double theta = 0;
 		while (theta < 2 * M_PI)
 		{
@@ -47,7 +93,7 @@ static void			ft_draw_sphere_part2(t_env *e)
 			glVertex3f( slice_r0 * cos(theta1) / (1 / e->r), y0/ (1 / e->r), slice_r0 * sin(theta1)/ (1 / e->r));
 			theta += delta_theta;
 		}
-		eta0 += delta_eta;
+		e->eta0 += e->delta_eta;
 	}
 	glEnd();
 	glPopMatrix();
