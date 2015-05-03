@@ -16,6 +16,8 @@ static char			ft_collision_left(t_env *e, int i, int j)
 {
 	static double	t;
 
+	e->fx = -1 + j * e->sx;
+	e->fy = 1 - (i + 1) * e->sy;
 	if (e->pasballx < e->fx + e->px && e->posballx > e->fx + e->px)
 	{
 		t = (((e->posbally - e->pasbally) / (e->posballx - e->pasballx)) *
@@ -111,14 +113,14 @@ void				ft_check_collision(t_env *e)
 	int				i;
 	int				j;
 
-	i = 0;
-	e->sx = 2 / (double)ft_strlen(e->map[i]);
+	e->sx = 2 / (double)ft_strlen(e->map[0]);
 	e->px = e->sx / 42;
 	e->sy = 0;
 	while (e->map[(int)e->sy])
 		e->sy++;
 	e->sy = (2 / (e->sy - 1)) / 2;
 	e->py = e->sy / 42;
+	i = 0;
 	while (e->map[i])
 	{
 		j = 0;
@@ -126,8 +128,6 @@ void				ft_check_collision(t_env *e)
 		{
 			if (e->map[i][j] != 1)
 			{
-				e->fx = -1 + j * e->sx;
-				e->fy = 1 - (i + 1) * e->sy;
 				ft_collision_left(e, i, j), ft_collision_right(e, i, j),
 				ft_collision_down(e, i, j), ft_collision_up(e, i, j);
 			}
